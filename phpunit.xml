@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    phpunit -c phpunit.xml
+-->
+<phpunit backupGlobals="false"
+         backupStaticAttributes="false"
+         colors="true"
+         convertErrorsToExceptions="true"
+         convertNoticesToExceptions="true"
+         convertWarningsToExceptions="true"
+         syntaxCheck="true"
+         forceCoversAnnotation="false">
+
+    <testsuites>
+        <testsuite name="Application">
+            <directory>./tests/UnitTest/Application/</directory>
+        </testsuite>
+        <testsuite name="System">
+            <directory>./tests/UnitTest/System/</directory>
+            <file>./tests/UnitTest/CoreTest.php</file>
+        </testsuite>
+        <testsuite name="Integration">
+            <directory>./tests/IntegrationTest/</directory>
+        </testsuite>
+    </testsuites>
+
+    <filter>
+        <whitelist processUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">./System/</directory>
+            <directory suffix=".php">./Application/</directory>
+        </whitelist>
+    </filter>
+
+</phpunit>
