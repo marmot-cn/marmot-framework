@@ -1,5 +1,5 @@
 <?php
-namespace Marmort\Frameword\Classes;
+namespace Marmort\Framework\Classes;
 
 class Error
 {
