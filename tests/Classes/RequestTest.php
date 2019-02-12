@@ -1,9 +1,9 @@
 <?php
-namespace System\Classes;
+namespace Marmot\Framework\Classes;
 
 use Marmot\Core;
-use System\Classes\Request;
-use System\Interfaces\IMediaTypeStrategy;
+use Marmot\Framework\Classes\Request;
+use Marmot\Framework\Interfaces\IMediaTypeStrategy;
 
 use PHPUnit\Framework\TestCase;
 

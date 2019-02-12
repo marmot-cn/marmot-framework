@@ -1,9 +1,9 @@
 <?php
-namespace System\Classes;
+namespace Marmot\Framework\Classes;
 
 use PHPUnit\Framework\TestCase;
 use Marmot\Core;
-use System\Classes\Request;
+use Marmot\Framework\Classes\Request;
 
 class ControllerTest extends TestCase
 {
@@ -11,7 +11,7 @@ class ControllerTest extends TestCase
 
     public function setUp()
     {
-        $this->stub = $this->getMockBuilder('System\Classes\Controller')
+        $this->stub = $this->getMockBuilder('Marmot\Framework\Classes\Controller')
                       ->getMockForAbstractClass();
     }
 
@@ -26,11 +26,11 @@ class ControllerTest extends TestCase
     public function testConstruct()
     {
         $this->assertInstanceof(
-            'System\Classes\Request',
+            'Marmot\Framework\Classes\Request',
             $this->stub->getRequest()
         );
         $this->assertInstanceof(
-            'System\Classes\Response',
+            'Marmot\Framework\Classes\Response',
             $this->stub->getResponse()
         );
     }
@@ -42,7 +42,7 @@ class ControllerTest extends TestCase
     public function testRender()
     {
         //mock interface
-        $ivew = $this->getMockBuilder('System\Interfaces\IView')
+        $ivew = $this->getMockBuilder('Marmot\Framework\Interfaces\IView')
                      ->setMethods(['display'])
                      ->getMock();
 

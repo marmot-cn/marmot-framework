@@ -1,5 +1,5 @@
 <?php
-namespace System\View;
+namespace Marmot\Framework\View;
 
 use PHPUnit\Framework\TestCase;
 use Marmot\Core;
@@ -21,7 +21,7 @@ class EmptyViewTest extends TestCase
 
     public function testCorrectImplementIView()
     {
-        $this->assertInstanceof('System\Interfaces\IView', $this->stub);
+        $this->assertInstanceof('Marmot\Framework\Interfaces\IView', $this->stub);
     }
 
     public function testDisplay()

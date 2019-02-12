@@ -1,15 +1,15 @@
 <?php
-namespace System\Classes;
+namespace Marmot\Framework\Classes;
 
 use PHPUnit\Framework\TestCase;
 
 use Marmot\Core;
-use System\Classes\CommandBus;
-use System\Interfaces\ICommandHandlerFactory;
-use System\Interfaces\ICommand;
-use System\Interfaces\INull;
-use System\Interfaces\ICommandHandler;
-use System\Classes\NullCommandHandler;
+use Marmot\Framework\Classes\CommandBus;
+use Marmot\Framework\Interfaces\ICommandHandlerFactory;
+use Marmot\Framework\Interfaces\ICommand;
+use Marmot\Framework\Interfaces\INull;
+use Marmot\Framework\Interfaces\ICommandHandler;
+use Marmot\Framework\Classes\NullCommandHandler;
 
 use Prophecy\Argument;
 

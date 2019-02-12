@@ -1,11 +1,11 @@
 <?php
-namespace System\Classes;
+namespace Marmot\Framework\Classes;
 
 use PHPUnit\Framework\TestCase;
 
 use Marmot\Core;
-use System\Classes\NullCommandHandler;
-use System\Interfaces\ICommand;
+use Marmot\Framework\Classes\NullCommandHandler;
+use Marmot\Framework\Interfaces\ICommand;
 
 class NullCommandHandlerTest extends TestCase
 {
@@ -18,7 +18,7 @@ class NullCommandHandlerTest extends TestCase
 
     public function testImplementsNull()
     {
-        $this->assertInstanceOf('System\Interfaces\INull', $this->nullCommandHandler);
+        $this->assertInstanceOf('Marmot\Framework\Interfaces\INull', $this->nullCommandHandler);
     }
 
     public function testExecute()

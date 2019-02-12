@@ -1,5 +1,5 @@
 <?php
-namespace System\Classes;
+namespace Marmot\Framework\Classes;
 
 use Marmot\Core;
 use PHPUnit\Framework\TestCase;

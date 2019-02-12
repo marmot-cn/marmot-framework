@@ -1,10 +1,10 @@
 <?php
-namespace System\View;
+namespace Marmot\Framework\View;
 
 use PHPUnit\Framework\TestCase;
 
 use Marmot\Core;
-use System\Classes\Response;
+use Marmot\Framework\Classes\Response;
 
 class JsonApiResponseFormatterTest extends TestCase
 {
@@ -23,7 +23,7 @@ class JsonApiResponseFormatterTest extends TestCase
 
     public function testCorrectImplementResponseFormatter()
     {
-        $this->assertInstanceof('System\Interfaces\IResponseFormatter', $this->stub);
+        $this->assertInstanceof('Marmot\Framework\Interfaces\IResponseFormatter', $this->stub);
     }
 
     public function testFormat()

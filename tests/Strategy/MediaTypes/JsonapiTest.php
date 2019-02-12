@@ -1,8 +1,8 @@
 <?php
-namespace System\Strategy\MediaTypes;
+namespace Marmot\Framework\Strategy\MediaTypes;
 
 use PHPUnit\Framework\TestCase;
-use System\Classes\Request;
+use Marmot\Framework\Classes\Request;
 use Marmot\Core;
 
 class JsonapiTest extends TestCase
@@ -22,7 +22,7 @@ class JsonapiTest extends TestCase
 
     public function testImplementsIMediaTypeStrategy()
     {
-        $this->assertInstanceOf('System\Interfaces\IMediaTypeStrategy', $this->strategy);
+        $this->assertInstanceOf('Marmot\Framework\Interfaces\IMediaTypeStrategy', $this->strategy);
     }
 
     public function testInCorrectContentTypeHeaderWithPostMethod()
