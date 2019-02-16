@@ -1,5 +1,5 @@
 <?php
-//powered by kevin
+//powered by chloroplast
 namespace Marmot\Framework\Classes;
 
 use Marmot\Framework\Command\Cache\DelCacheCommand;
@@ -9,12 +9,29 @@ use Marmot\Core;
 
 abstract class Cache implements CacheLayer
 {
-    
     protected $key;
+
+    private $cacheDriver;
     
     public function __construct(string $key)
     {
         $this->key = $key;
+        $this->cacheDriver = Core::$cacheDriver;
+    }
+
+    protected function getKey() : string
+    {
+        return $this->key;
+    }
+
+    protected function getCacheDriver()
+    {
+        return $this->cacheDriver;
+    }
+
+    protected function formatID($id) : string
+    {
+        return $this->getKey().'_'.$id;
     }
 
     /**
@@ -22,12 +39,12 @@ abstract class Cache implements CacheLayer
      * @param string $id 缓存id
      * @param mixed $data 缓存内容
      * @param integer $time 缓存存在时间,默认为0
-     * @author chloroplast1983
+     * @author chloroplast
      * @version 1.0.20131017
      */
     public function save($id, $data, $time = 0) : bool
     {
-        $command = new SaveCacheCommand($this->key.'_'.$id, $data, $time);
+        $command = new SaveCacheCommand($this->formatID($id), $data, $time);
         return $command -> execute();
     }
     
@@ -37,7 +54,7 @@ abstract class Cache implements CacheLayer
      */
     public function del($id) : bool
     {
-        $command = new DelCacheCommand($this->key.'_'.$id);
+        $command = new DelCacheCommand($this->formatID($id));
         return $command -> execute();
     }
     
@@ -47,7 +64,7 @@ abstract class Cache implements CacheLayer
      */
     public function get($id)
     {
-        return Core::$cacheDriver->fetch($this->key.'_'.$id);
+        return $this->getCacheDriver()->fetch($this->formatID($id));
     }
     
     /**
@@ -60,16 +77,15 @@ abstract class Cache implements CacheLayer
      */
     public function getList($idList) : array
     {
-
         $hits = $misses = array();
 
         foreach ($idList as $id) {
-            $keys[$id] = $this->key.'_'.$id;
+            $keys[$id] = $this->formatID($id);
         }
         
         $flipKey = array_flip($keys);
 
-        $hits = Core::$cacheDriver->fetchMultiple(array_values($keys));
+        $hits = $this->getCacheDriver()->fetchMultiple(array_values($keys));
 
         if (!$hits) {
             return array($misses, $flipKey);

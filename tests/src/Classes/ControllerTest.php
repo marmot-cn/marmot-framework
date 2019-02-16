@@ -2,6 +2,7 @@
 namespace Marmot\Framework\Classes;
 
 use PHPUnit\Framework\TestCase;
+
 use Marmot\Core;
 use Marmot\Framework\Classes\Request;
 

@@ -11,6 +11,7 @@ class NullCommandHandler implements ICommandHandler, INull
 {
     public function execute(ICommand $command)
     {
+        unset($command);
         Core::setLastError(COMMAND_HANDLER_NOT_EXIST);
         return false;
     }

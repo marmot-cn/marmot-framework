@@ -284,16 +284,15 @@ class Request
     {
         if ($this->bodyParams === null) {
             //兼容HTTP_X_HTTP_METHOD_OVERRIDE
+            $this->bodyParams = [];
             if ($this->isPostMethod() || $this->isPutMethod() || $this->isPatchMethod()) {
                 // PHP has already parsed the body so we have all params in $_POST
                 if (!empty($_POST)) {
                     $this->bodyParams = $_POST;
                 } else {
-                    $this->bodyParams = [];
                     $this->bodyParams = json_decode($this->getRawBody(), true);
                 }
             } else {
-                $this->bodyParams = [];
                 mb_parse_str($this->getRawBody(), $this->bodyParams);
             }
         }

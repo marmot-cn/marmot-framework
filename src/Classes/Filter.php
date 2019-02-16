@@ -3,7 +3,6 @@ namespace Marmot\Framework\Classes;
 
 class Filter
 {
-
     //添加转义字符（Array加强版）
     public static function addslashesPlus($string)
     {
@@ -83,24 +82,9 @@ class Filter
      * @param string $allowattributes
      * @return mixed
      */
-    public static function stripTagsAttributes($string, $allowtags = null, $allowattributes = null)
+    public static function stripTagsAttributes($string, $allowtags = null)
     {
-
 //        $string = strip_tags($string, $allowtags);
-//
-//        if (! is_null($allowattributes)) {
-//            if (! is_array($allowattributes)) {
-//                $allowattributes = explode(',', $allowattributes);
-//            }
-//            if (is_array($allowattributes)) {
-//                $allowattributes = implode(')(?<!', $allowattributes);
-//            }
-//            if (strlen($allowattributes) > 0) {
-//                $allowattributes = '(?<!' . $allowattributes . ')';
-//            }
-//            $expr = '/ [^ =]*' . $allowattributes . '=(\"[^\"]*\"|\'[^\']*\')/i';
-//        }
-        // XSS protection: <a href="javascript: alert(...
         $string = preg_replace('/href=([\'"]).*?javascript:(.*)?\\1/i', 'href="#$2"', $string);
         return $string;
     }

@@ -8,13 +8,13 @@ use Marmot\Core;
 /**
  * 全局事物控制,这个事务会把cache封装到同步到mysql事务内
  * 如果Mysql回滚了则cache也会回滚操作
- * @author chloroplast1983
- *
+ * @author chloroplast
  */
 class Transaction
 {
-    
     private $transactionSubject;
+
+    private $dbDriver;
 
     private static $instance;
     /**
@@ -28,12 +28,14 @@ class Transaction
     {
         $this->inTransaction = false;
         $this->transactionSubject = new Subject();
+        $this->dbDriver = Core::$dbDriver;
     }
     
     public function __destruct()
     {
         unset($this->inTransaction);
         unset($this->transactionSubject);
+        unset($this->dbDriver);
     }
     
     public static function &getInstance()
@@ -44,9 +46,14 @@ class Transaction
         return self::$instance;
     }
 
-    private function getTransactionSubject() : Subject
+    protected function getTransactionSubject() : Subject
     {
         return $this->transactionSubject;
+    }
+
+    protected function getDbDriver()
+    {
+        return $this->dbDriver;
     }
     
     public function beginTransaction() : bool
@@ -54,12 +61,12 @@ class Transaction
         //memcached观察者声明,用于在事务中使用保证cache数据和mysql数据一致
         //当时事务发生回滚时候,需要调用command undo
         $this->inTransaction = true;
-        return Core::$dbDriver->beginTA();
+        return $this->getDbDriver()->beginTA();
     }
 
     public function commit() : bool
     {
-        return Core::$dbDriver->commit();
+        return $this->getDbDriver()->commit();
     }
     
     public function inTransaction() : bool
@@ -69,14 +76,14 @@ class Transaction
 
     public function attachRollBackObserver(Observer $observer) : bool
     {
-        return $this->transactionSubject->attach($observer);
+        return $this->getTransactionSubject()->attach($observer);
     }
     
     public function rollBack() : bool
     {
-        $this->transactionSubject->notifyObserver();
+        $this->getTransactionSubject()->notifyObserver();
         $this->inTransaction = false;//关闭事务
         $this->transactionSubject = null;//释放subject
-        return Core::$dbDriver->rollBack();
+        return $this->getDbDriver()->rollBack();
     }
 }

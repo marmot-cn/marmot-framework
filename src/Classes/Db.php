@@ -22,19 +22,28 @@ abstract class Db implements DbLayer
     /**
      * @var string DB表的前缀
      */
-    private $tablepre = 'pcore_';
+    protected $tablepre = 'pcore_';
+
+    private $dbDriver;
     
     public function __construct(string $table)
     {
         $this->table = $table;
+        $this->dbDriver = Core::$dbDriver;
     }
+
+    protected function getDbDriver()
+    {
+        return $this->dbDriver;
+    }
+
     /**
      * 删除数据操作,但是不提倡物理删除数据
      * @param array|string $wheresqlArr 查询匹配条件
      */
     public function delete($whereSqlArr)
     {
-        return Core::$dbDriver->delete($this->tname(), $whereSqlArr);
+        return $this->getDbDriver()->delete($this->tname(), $whereSqlArr);
     }
     
     /**
@@ -43,8 +52,7 @@ abstract class Db implements DbLayer
      */
     public function insert($insertSqlArr, $returnLastInsertId = true) : int
     {
-        $rows = Core::$dbDriver->insert($this->tname(), $insertSqlArr);
-
+        $rows = $this->getDbDriver()->insert($this->tname(), $insertSqlArr);
         if (!$rows) {
             return false;
         }
@@ -64,7 +72,7 @@ abstract class Db implements DbLayer
 
         $sqlstr = 'SELECT ' . $select . ' FROM ' . $this->tname() . $useIndex . $sql;
 
-        return Core::$dbDriver->query($sqlstr);
+        return $this->getDbDriver()->query($sqlstr);
     }
 
     /**
@@ -74,7 +82,7 @@ abstract class Db implements DbLayer
      */
     public function update(array $setSqlArr, $whereSqlArr) : bool
     {
-        return Core::$dbDriver->update($this->tname(), $setSqlArr, $whereSqlArr);
+        return $this->getDbDriver()->update($this->tname(), $setSqlArr, $whereSqlArr);
     }
 
     /**
@@ -103,7 +111,7 @@ abstract class Db implements DbLayer
 
         $sqlstr .= $dbLayer->tname().' ON '.$joinCondition.$sql;
  
-        return Core::$dbDriver->query($sqlstr);
+        return $this->getDbDriver()->query($sqlstr);
     }
 
     /**
@@ -111,7 +119,6 @@ abstract class Db implements DbLayer
      */
     public function tname() : string
     {
-
         return $this->tablepre.$this->table;
     }
 }

@@ -1,7 +1,8 @@
 <?php
 namespace Marmot\Framework\Observer;
 
-use Marmot\Framework\Interfaces;
+use Marmot\Framework\Interfaces\Observer;
+use Marmot\Framework\Interfaces\Command;
 
 /**
  * 全站观察者文件,需要统一函数update
@@ -9,22 +10,24 @@ use Marmot\Framework\Interfaces;
 
 /**
  * 缓存memcache观察者
- * @author chloroplast1983
- *
+ * @author chloroplast
  */
-class CacheObserver implements Interfaces\Observer
+class CacheObserver implements Observer
 {
-    
     private $cacheCommand;
     
-    public function __construct(Interfaces\Command $cacheCommand)
+    public function __construct(Command $cacheCommand)
     {
         $this->cacheCommand = $cacheCommand;
     }
+
+    protected function getCacheCommand() : Command
+    {
+        return $this->cacheCommand;
+    }
+
     public function update()
     {
-        if ($this->cacheCommand instanceof Interfaces\Command) {
-            $this->cacheCommand->undo();
-        }
+        $this->getCacheCommand()->undo();
     }
 }

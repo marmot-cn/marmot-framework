@@ -1,19 +1,13 @@
 <?php
 namespace Marmot\Framework\Adapter\Restful\Translator;
 
-use Marmot\Framework\Classes\Translator;
+use Marmot\Framework\Interfaces\ITranslator;
 use Marmot\Framework\Adapter\Restful\CacheResponse;
 use Marmot\Framework\Adapter\Restful\NullResponse;
 use GuzzleHttp\Psr7\Response;
 
-class CacheResponseTranslator extends Translator
+class CacheResponseTranslator implements ITranslator
 {
-    public function arrayToObjects(array $expression) : array
-    {
-        unset($expression);
-        return [];
-    }
-
     public function arrayToObject(array $expression, $cacheResponse = null)
     {
         unset($cacheResponse);
@@ -31,8 +25,9 @@ class CacheResponseTranslator extends Translator
         );
     }
 
-    public function objectToArray($cacheResponse)
+    public function objectToArray($cacheResponse, array $keys = array())
     {
+        unset($keys);
         return array(
             'statusCode' => $cacheResponse->getStatusCode(),
             'contents' => $cacheResponse->getBody()->getContents(),

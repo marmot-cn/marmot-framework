@@ -1,0 +1,6 @@
+phpfpm:
+  image: "registry.cn-hangzhou.aliyuncs.com/phpfpm/phpfpm-end"
+  volumes:
+   - ./:/var/www/html/
+  cap_add:
+   - SYS_PTRACE

@@ -1,13 +1,14 @@
 <?php
 namespace Marmot\Framework\Observer;
 
-use Marmot\Framework\Interfaces;
+use Marmot\Framework\Interfaces\Subject as ISubject;
+use Marmot\Framework\Interfaces\Observer;
 
 /**
- * @author chloroplast1983
+ * @author chloroplast
  *
  */
-class Subject implements Interfaces\Subject
+class Subject implements ISubject
 {
     
     private $observers;
@@ -21,7 +22,7 @@ class Subject implements Interfaces\Subject
      * 增加一个新的观察者对象
      * @param Observer $observer
      */
-    public function attach(Interfaces\Observer $observer)
+    public function attach(Observer $observer)
     {
         return array_push($this->observers, $observer);
     }
@@ -30,7 +31,7 @@ class Subject implements Interfaces\Subject
      * 删除一个已注册过的观察者对象
      * @param Observer $observer
      */
-    public function detach(Interfaces\Observer $observer) : bool
+    public function detach(Observer $observer) : bool
     {
         $index = array_search($observer, $this->observers);
         if ($index === false || ! array_key_exists($index, $this->observers)) {

@@ -14,8 +14,13 @@
 
     <testsuites>
         <testsuite name="Framework">
-            <directory>./tests/</directory>
+            <directory>./tests/src</directory>
         </testsuite>
     </testsuites>
 
+    <filter>
+        <whitelist processUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">./src</directory>
+        </whitelist>
+    </filter>
 </phpunit>

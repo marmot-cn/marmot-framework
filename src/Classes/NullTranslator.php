@@ -26,11 +26,17 @@ class NullTranslator implements ITranslator, INull
 
     public function arrayToObject(array $expression, $object = null)
     {
+        unset($expression);
+        unset($object);
+
         return $this->translatorNotExist();
     }
 
     public function objectToArray($object, array $keys = array())
     {
+        unset($expression);
+        unset($object);
+
         return $this->translatorNotExist();
     }
 }

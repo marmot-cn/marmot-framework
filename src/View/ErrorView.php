@@ -2,7 +2,6 @@
 namespace Marmot\Framework\View;
 
 use Marmot\Framework\Interfaces\IView;
-use Common\View\JsonApiView;
 use Marmot\Core;
 
 use Neomerx\JsonApi\Encoder\Encoder;
@@ -15,8 +14,6 @@ use Neomerx\JsonApi\Document\Error as JsonApiError;
  */
 class ErrorView implements IView
 {
-    use JsonApiView;
-
     public function display()
     {
         return $this->jsonApiError();

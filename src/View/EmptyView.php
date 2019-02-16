@@ -5,7 +5,6 @@ use Marmot\Framework\Interfaces\IView;
 
 class EmptyView implements IView
 {
-   
     private $rules;
 
     private $data;

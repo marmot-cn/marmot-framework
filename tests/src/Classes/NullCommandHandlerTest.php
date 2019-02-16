@@ -16,6 +16,11 @@ class NullCommandHandlerTest extends TestCase
         $this->nullCommandHandler = new NullCommandHandler();
     }
 
+    public function testImplementsICommandHandler()
+    {
+        $this->assertInstanceOf('Marmot\Framework\Interfaces\ICommandHandler', $this->nullCommandHandler);
+    }
+
     public function testImplementsNull()
     {
         $this->assertInstanceOf('Marmot\Framework\Interfaces\INull', $this->nullCommandHandler);

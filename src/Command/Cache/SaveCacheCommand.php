@@ -16,12 +16,18 @@ class SaveCacheCommand implements Interfaces\Command
     private $key;
     private $data;
     private $time;
+
+    private $cacheDriver;
+
+    private $transaction;
     
     public function __construct($key, $data, $time = 0)
     {
         $this->key = $key;
         $this->data = $data;
         $this->time = $time;
+        $this->cacheDriver = Core::$cacheDriver;
+        $this->transaction = Transaction::getInstance();
         
         $this->attachedByObserver();
     }
@@ -31,11 +37,38 @@ class SaveCacheCommand implements Interfaces\Command
         unset($this->key);
         unset($this->data);
         unset($this->time);
+        unset($this->cacheDriver);
+        unset($this->transaction);
     }
 
-    private function attachedByObserver() : bool
+    protected function getKey() : string
     {
-        $transaction = Transaction::getInstance();
+        return $this->key;
+    }
+
+    protected function getData()
+    {
+        return $this->data;
+    }
+
+    protected function getTime() : int
+    {
+        return $this->time;
+    }
+
+    protected function getCacheDriver()
+    {
+        return $this->cacheDriver;
+    }
+
+    protected function getTransaction() : Transaction
+    {
+        return $this->transaction;
+    }
+
+    protected function attachedByObserver() : bool
+    {
+        $transaction = $this->getTransaction();
         if ($transaction->inTransaction()) {
             return $transaction->attachRollBackObserver(new CacheObserver($this));
         }
@@ -44,11 +77,12 @@ class SaveCacheCommand implements Interfaces\Command
 
     public function execute() : bool
     {
-        return Core::$cacheDriver->save($this->key, $this->data, $this->time);
+        $this->attachedByObserver();
+        return $this->getCacheDriver()->save($this->getKey(), $this->getData(), $this->getTime());
     }
 
     public function undo() : bool
     {
-        return Core::$cacheDriver->delete($this->key);
+        return $this->getCacheDriver()->delete($this->getKey());
     }
 }
