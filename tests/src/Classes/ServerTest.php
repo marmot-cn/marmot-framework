@@ -12,9 +12,4 @@ class ServerTest extends TestCase
     {
         $this->stub = new Server();
     }
-
-    public function testHostInCli()
-    {
-        $this->assertEmpty($this->stub->host());
-    }
 }

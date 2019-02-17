@@ -17,7 +17,7 @@ define('S_ROOT', dirname(__DIR__) . DIRECTORY_SEPARATOR);
  *
  * @author  chloroplast1983
  * @version 1.0.20130916
-j*/
+ */
 abstract class MarmotCore
 {
     //框架内的容器,这里暂时使用的是第三方的PHP-DI容器

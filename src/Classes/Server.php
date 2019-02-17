@@ -3,8 +3,8 @@ namespace Marmot\Framework\Classes;
 
 class Server
 {
-    public static function host() : string
+    public static function get($name, $value = '') : string
     {
-        return isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : '';
+        return isset($_SERVER[$name]) ? $_SERVER[$name] : $value;
     }
 }

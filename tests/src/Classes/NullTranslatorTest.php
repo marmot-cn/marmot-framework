@@ -13,7 +13,7 @@ class NullTranslatorTest extends TestCase
 
     public function setUp()
     {
-        $this->nullTranslator = new NullTranslator();
+        $this->nullTranslator = NullTranslator::getInstance();
     }
 
     public function testImplementsITranslator()
@@ -29,6 +29,14 @@ class NullTranslatorTest extends TestCase
     public function testArrayToObject()
     {
         $result = $this->nullTranslator->arrayToObject(array());
+
+        $this->assertFalse($result);
+        $this->assertEquals(TRANSLATOR_NOT_EXIST, Core::getLastError()->getId());
+    }
+
+    public function testObjectToArray()
+    {
+        $result = $this->nullTranslator->objectToArray('test');
 
         $this->assertFalse($result);
         $this->assertEquals(TRANSLATOR_NOT_EXIST, Core::getLastError()->getId());

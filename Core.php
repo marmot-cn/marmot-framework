@@ -55,7 +55,7 @@ class Core extends \Marmot\Framework\MarmotCore
         //加载框架Application文件的autoload,匿名函数 -- 开始
         spl_autoload_register(
             function ($className) {
-                $classFile = str_replace(['\\','Marmot/Framework/'], ['/',''], $className) . '.class.php';
+                $classFile = str_replace(['\\','Marmot/Framework/'], ['/',''], $className) . '.php';
                 $classFile = S_ROOT.'src/'.$classFile;
                 if (file_exists($classFile)) {
                       include_once $classFile;
@@ -65,7 +65,7 @@ class Core extends \Marmot\Framework\MarmotCore
 
         spl_autoload_register(
             function ($className) {
-                $classFile = str_replace(['\\','Marmot/Framework/'], ['/',''], $className) . '.class.php';
+                $classFile = str_replace(['\\','Marmot/Framework/'], ['/',''], $className) . '.php';
                 $classFile = S_ROOT.'tests/mock/'.$classFile;
                 if (file_exists($classFile)) {
                     include_once $classFile;

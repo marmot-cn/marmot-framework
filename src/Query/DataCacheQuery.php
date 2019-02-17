@@ -2,7 +2,7 @@
 namespace Marmot\Framework\Query;
 
 use Marmot\Framework\Classes;
-use Marmot\Framework\Interfaces;
+use Marmot\Framework\Interfaces\CacheLayer;
 
 /**
  * DataCacheQuery文件,abstract抽象类.针对单独的数据缓存抽象类
@@ -16,14 +16,19 @@ abstract class DataCacheQuery
 
     private $cacheLayer;//缓存层
 
-    public function __construct(Interfaces\CacheLayer $cacheLayer)
+    public function __construct(CacheLayer $cacheLayer)
     {
         $this->cacheLayer = $cacheLayer;
     }
 
     public function __destruct()
     {
-        unset($this->dbLayer);
+        unset($this->cacheLayer);
+    }
+
+    protected function getCacheLayer() : CacheLayer
+    {
+        return $this->cacheLayer;
     }
 
     /**

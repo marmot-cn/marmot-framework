@@ -5,7 +5,7 @@ use PHPUnit\Framework\TestCase;
 use Marmot\Framework\Classes\Request;
 use Marmot\Core;
 
-class JsonapiTest extends TestCase
+class JsonapiStrategyTest extends TestCase
 {
 
     public function setUp()
