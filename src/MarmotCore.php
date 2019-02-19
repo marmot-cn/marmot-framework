@@ -10,8 +10,6 @@ namespace Marmot\Framework;
 
 use Marmot\Framework\Classes\Error;
 
-define('S_ROOT', dirname(__DIR__) . DIRECTORY_SEPARATOR);
-
 /**
  * 文件核心类
  *
@@ -145,12 +143,14 @@ abstract class MarmotCore
         $containerCache->setNamespace('phpcore');
         $containerBuilder->setDefinitionCache($containerCache);
 
-        $containerBuilder->writeProxiesToFile(true, S_ROOT.'Cache/proxies');
+        $containerBuilder->writeProxiesToFile(true, $this->getAppPath().'Cache/proxies');
         //为容器设置配置文件
-        $containerBuilder->addDefinitions(S_ROOT.'config.'.$_ENV['APP_ENV'].'.php');
+        $containerBuilder->addDefinitions($this->getAppPath().'config.'.$_ENV['APP_ENV'].'.php');
         //创建容器
         self::$container = $containerBuilder->build();
     }
+
+    abstract protected function getAppPath() : string;
     
     /**
      * 路由,需要解决以前随意由个人设置路由的习惯,
@@ -158,7 +158,7 @@ abstract class MarmotCore
      *
      * @version 1.0.20160204
      */
-    private function initRoute()
+    protected function initRoute()
     {
         //创建路由规则,如果对外提供接口考虑token用于验证
         $dispatcher = \FastRoute\cachedDispatcher(
@@ -167,13 +167,13 @@ abstract class MarmotCore
                 $each->addRoute('GET', '/', ['Home\Controller\IndexController','index']);
 
                 //获取配置好的路由规则
-                $routeRules = include S_ROOT.'/Application/routeRules.php';
+                $routeRules = include $this->getAppPath().'/Application/routeRules.php';
                 foreach ($routeRules as $route) {
                     $each->addRoute($route['method'], $route['rule'], $route['controller']);
                 }
             },
             [
-                'cacheFile' => S_ROOT. 'Cache/route.cache',
+                'cacheFile' => $this->getAppPath(). 'Cache/route.cache',
                 'cacheDisabled' => self::$container->get('cache.route.disable'),
             ]
         );

@@ -20,4 +20,8 @@ class MockMarmotCore extends \Marmot\Framework\MarmotCore
     protected function initCache()
     {
     }
+
+    protected function getAppPath() : string
+    {
+    }
 }

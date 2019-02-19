@@ -56,7 +56,7 @@ class Core extends \Marmot\Framework\MarmotCore
         spl_autoload_register(
             function ($className) {
                 $classFile = str_replace(['\\','Marmot/Framework/'], ['/',''], $className) . '.php';
-                $classFile = S_ROOT.'src/'.$classFile;
+                $classFile = $this->getAppPath().'src/'.$classFile;
                 if (file_exists($classFile)) {
                       include_once $classFile;
                 }
@@ -66,12 +66,17 @@ class Core extends \Marmot\Framework\MarmotCore
         spl_autoload_register(
             function ($className) {
                 $classFile = str_replace(['\\','Marmot/Framework/'], ['/',''], $className) . '.php';
-                $classFile = S_ROOT.'tests/mock/'.$classFile;
+                $classFile = $this->getAppPath().'tests/mock/'.$classFile;
                 if (file_exists($classFile)) {
                     include_once $classFile;
                 }
             }
         );
+    }
+
+    protected function getAppPath() : string
+    {
+        return dirname(__FILE__) . DIRECTORY_SEPARATOR;
     }
 
     protected function initDb()
