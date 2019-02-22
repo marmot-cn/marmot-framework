@@ -41,13 +41,13 @@ abstract class MarmotCore
     public function init()
     {
         //autoload
-        self::initAutoload();
-        self::initContainer();//引入容器
-        self::initCache();//初始化缓存使用
-        self::initEnv();//初始化环境
-        self::initDb();//初始化mysql
-        self::initError();
-        self::initRoute();
+        $this->initAutoload();
+        $this->initContainer();//引入容器
+        $this->initCache();//初始化缓存使用
+        $this->initEnv();//初始化环境
+        $this->initDb();//初始化mysql
+        $this->initError();
+        $this->initRoute();
     }
 
     /**
@@ -60,12 +60,12 @@ abstract class MarmotCore
      */
     public function initCli()
     {
-        self::initAutoload();//autoload
-        self::initContainer();//引入容器
-        self::initEnv();//初始化环境
-        self::initCache();//初始化缓存使用
-        self::initDb();//初始化mysql
-        self::initError();
+        $this->initAutoload();//autoload
+        $this->initContainer();//引入容器
+        $this->initEnv();//初始化环境
+        $this->initCache();//初始化缓存使用
+        $this->initDb();//初始化mysql
+        $this->initError();
     }
     
     /**
@@ -74,11 +74,7 @@ abstract class MarmotCore
      * 1. 加载第三方的autoload,主要是composer管理的第三方依赖
      * 2. 子类继承覆写自己的加载方式
      */
-    protected function initAutoload()
-    {
-        //加载第三方的composer的autoload
-        include 'vendor/autoload.php';
-    }
+    abstract protected function initAutoload();
 
     /**
      * 初始化网站运行环境的一些全局变量

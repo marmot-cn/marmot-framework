@@ -34,13 +34,13 @@ class Core extends \Marmot\Framework\MarmotCore
      */
     public function initTest()
     {
-        self::initAutoload();//autoload
-        self::initTestEnv();//初始化测试环境
-        self::initContainer();//引入容器
-        self::initEnv();//初始化环境
-        self::initCache();//初始化缓存使用
-        self::initDb();//初始化mysql
-        self::initError();
+        $this->initAutoload();//autoload
+        $this->initTestEnv();//初始化测试环境
+        $this->initContainer();//引入容器
+        $this->initEnv();//初始化环境
+        $this->initCache();//初始化缓存使用
+        $this->initDb();//初始化mysql
+        $this->initError();
     }
     
     private function initTestEnv()
@@ -50,8 +50,6 @@ class Core extends \Marmot\Framework\MarmotCore
 
     protected function initAutoload()
     {
-        parent::initAutoload();
-
         //加载框架Application文件的autoload,匿名函数 -- 开始
         spl_autoload_register(
             function ($className) {

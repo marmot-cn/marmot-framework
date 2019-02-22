@@ -24,4 +24,8 @@ class MockMarmotCore extends \Marmot\Framework\MarmotCore
     protected function getAppPath() : string
     {
     }
+
+    protected function initAutoload()
+    {
+    }
 }
