@@ -9,6 +9,7 @@
 namespace Marmot\Framework;
 
 use Marmot\Framework\Classes\Error;
+use Marmot\Framework\Application\IApplication;
 
 /**
  * 文件核心类
@@ -34,13 +35,16 @@ abstract class MarmotCore
     private static $lastError;
 
     protected static $errorDescriptions;
+
+    protected $application;
     
     /**
      * 网站正常启动流程
      */
     public function init()
     {
-        //autoload
+        $this->application = $application;
+
         $this->initAutoload();
         $this->initContainer();//引入容器
         $this->initCache();//初始化缓存使用
@@ -67,6 +71,8 @@ abstract class MarmotCore
         $this->initDb();//初始化mysql
         $this->initError();
     }
+
+    abstract protected function getApplication() : IApplication;
     
     /**
      * 符合PSR4自动加载规范
@@ -85,6 +91,7 @@ abstract class MarmotCore
     protected function initEnv()
     {
         self::$container->set('time', time());
+        $this->getApplication()->initConfig();
     }
 
     /**
@@ -94,6 +101,9 @@ abstract class MarmotCore
     {
         include_once 'errorConfig.php';
         self::$errorDescriptions = include_once 'errorDescriptionConfig.php';
+
+        $this->getApplication()->initErrorConfig();
+        self::$errorDescriptions = self::$errorDescriptions + $this->getApplication()->getErrorDescriptions();
 
         self::setLastError(ERROR_NOT_DEFINED);
     }
@@ -178,7 +188,7 @@ abstract class MarmotCore
         $uri = rawurldecode(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH));
         $routeInfo = $dispatcher->dispatch($httpMethod, $uri);
 
-        $controller = ['Home\Controller\IndexController','error'];
+        $controller = ['Marmot\Framework\Classes\Controller\ErrorController','error'];
         $parameters = [];
 
         switch ($routeInfo[0]) {

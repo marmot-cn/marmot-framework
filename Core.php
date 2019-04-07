@@ -8,6 +8,9 @@
 
 namespace Marmot;
 
+use Marmot\Framework\Application\IApplication;
+use Marmot\Framework\MockApplication;
+
 /**
  * 文件核心类
  *
@@ -35,6 +38,7 @@ class Core extends \Marmot\Framework\MarmotCore
     public function initTest()
     {
         $this->initAutoload();//autoload
+        $this->initApplication();
         $this->initTestEnv();//初始化测试环境
         $this->initContainer();//引入容器
         $this->initEnv();//初始化环境
@@ -42,7 +46,17 @@ class Core extends \Marmot\Framework\MarmotCore
         $this->initDb();//初始化mysql
         $this->initError();
     }
-    
+
+    private function initApplication()
+    {
+        $this->application = new MockApplication();
+    }
+
+    protected function getApplication() : IApplication
+    {
+        return $this->application;
+    }
+
     private function initTestEnv()
     {
         $_ENV['APP_ENV'] = 'test';

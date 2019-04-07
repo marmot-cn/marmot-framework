@@ -1,8 +1,15 @@
 <?php
 namespace Marmot\Framework;
 
+use Marmot\Framework\Application\IApplication;
+
 class MockMarmotCore extends \Marmot\Framework\MarmotCore
 {
+    protected function getApplication() : IApplication
+    {
+        return new MockApplication();
+    }
+
     public function initEnv()
     {
         parent::initEnv();

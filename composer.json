@@ -11,6 +11,7 @@
         }
     ],
     "require": {
+        "ezyang/htmlpurifier": "4.10.0",
         "nikic/fast-route": "0.7.0",
         "php-di/php-di": "5.4.6",
         "doctrine/annotations": "1.6.0",

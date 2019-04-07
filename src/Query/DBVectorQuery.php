@@ -2,7 +2,7 @@
 namespace Marmot\Framework\Query;
 
 use Marmot\Framework\Classes;
-use Marmot\Framework\Interfaces;
+use Marmot\Framework\Interfaces\DbLayer;
 
 class DBVectorQuery extends VectorQuery
 {
@@ -11,19 +11,29 @@ class DBVectorQuery extends VectorQuery
      */
     protected $dbLayer;//数据层
 
-    public function __construct(Interfaces\DbLayer $dbLayer)
+    public function __construct(DbLayer $dbLayer)
     {
         $this->dbLayer = $dbLayer;
     }
 
+    public function __destruct()
+    {
+        unset($this->dbLayer);
+    }
+
+    protected function getDbLayer() : DbLayer
+    {
+        return $this->dbLayer;
+    }
+
     public function add(array $data)
     {
-        return $this->dbLayer->insert($data, false);
+        return $this->getDbLayer()->insert($data, false);
     }
 
     public function delete($condition)
     {
-        $rows = $this->dbLayer->delete($condition);
+        $rows = $this->getDbLayer()->delete($condition);
         if ($rows) {
             return true;
         }
@@ -47,7 +57,7 @@ class DBVectorQuery extends VectorQuery
         if ($size > 0) {
             $condition = $condition.' LIMIT '.$offset.','.$size;
         }
-        return $this->dbLayer->select($condition, '*');
+        return $this->getDbLayer()->select($condition, '*');
     }
 
     /**
@@ -57,7 +67,7 @@ class DBVectorQuery extends VectorQuery
      */
     public function count(string $condition = '1')
     {
-        $count = $this->dbLayer->select($condition, 'COUNT(*) as count');
+        $count = $this->getDbLayer()->select($condition, 'COUNT(*) as count');
         return $count[0]['count'];
     }
 }

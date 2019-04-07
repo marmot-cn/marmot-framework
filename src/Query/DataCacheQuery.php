@@ -41,7 +41,7 @@ abstract class DataCacheQuery
      */
     public function save($key, $data, $ttl = 0)
     {
-        return $this->cacheLayer->save($key, $data, $ttl);
+        return $this->getCacheLayer()->save($key, $data, $ttl);
     }
 
     /**
@@ -52,7 +52,7 @@ abstract class DataCacheQuery
      */
     public function del($key)
     {
-        return $this->cacheLayer->del($key);
+        return $this->getCacheLayer()->del($key);
     }
 
     /**
@@ -63,6 +63,6 @@ abstract class DataCacheQuery
      */
     public function get(string $key)
     {
-        return $this->cacheLayer->get($key);
+        return $this->getCacheLayer()->get($key);
     }
 }
