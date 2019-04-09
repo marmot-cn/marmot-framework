@@ -9,6 +9,7 @@
 namespace Marmot\Framework;
 
 use Marmot\Framework\Classes\Error;
+use Marmot\Framework\Classes\Server;
 use Marmot\Framework\Application\IApplication;
 
 /**
@@ -43,9 +44,8 @@ abstract class MarmotCore
      */
     public function init()
     {
-        $this->application = $application;
-
         $this->initAutoload();
+        $this->initApplication();
         $this->initContainer();//引入容器
         $this->initCache();//初始化缓存使用
         $this->initEnv();//初始化环境
@@ -65,12 +65,15 @@ abstract class MarmotCore
     public function initCli()
     {
         $this->initAutoload();//autoload
+        $this->initApplication();
         $this->initContainer();//引入容器
         $this->initEnv();//初始化环境
         $this->initCache();//初始化缓存使用
         $this->initDb();//初始化mysql
         $this->initError();
     }
+
+    abstract protected function initApplication() : void;
 
     abstract protected function getApplication() : IApplication;
     
@@ -170,10 +173,11 @@ abstract class MarmotCore
         $dispatcher = \FastRoute\cachedDispatcher(
             function (\FastRoute\RouteCollector $each) {
                 //添加默认首页路由 -- 开始
-                $each->addRoute('GET', '/', ['Home\Controller\IndexController','index']);
-
+                list($method, $rule, $controller) = $this->getApplication()->getIndexRoute();
+                $each->addRoute($method, $rule, $controller);
+                
                 //获取配置好的路由规则
-                $routeRules = include $this->getAppPath().'/Application/routeRules.php';
+                $routeRules = $this->getApplication()->getRouteRules();
                 foreach ($routeRules as $route) {
                     $each->addRoute($route['method'], $route['rule'], $route['controller']);
                 }
@@ -184,27 +188,45 @@ abstract class MarmotCore
             ]
         );
 
-        $httpMethod = $_SERVER['REQUEST_METHOD'];
-        $uri = rawurldecode(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH));
+        $httpMethod = Server::get('REQUEST_METHOD');
+        $uri = rawurldecode(parse_url(Server::get('REQUEST_URI'), PHP_URL_PATH));
         $routeInfo = $dispatcher->dispatch($httpMethod, $uri);
 
-        $controller = ['Marmot\Framework\Classes\Controller\ErrorController','error'];
+        $controller = ['Marmot\Framework\Controller\ErrorController','error'];
         $parameters = [];
 
-        switch ($routeInfo[0]) {
-            case \FastRoute\Dispatcher::NOT_FOUND:
-                self::setLastError(ROUTE_NOT_EXIST);
-                break;
-            case \FastRoute\Dispatcher::METHOD_NOT_ALLOWED:
-                // $allowedMethods = $routeInfo[1];
-                self::setLastError(METHOD_NOT_ALLOWED);
-                break;
-            case \FastRoute\Dispatcher::FOUND:
+        $routeResult = $routeInfo[0];
+
+        if ($routeResult == \FastRoute\Dispatcher::NOT_FOUND)
+        {
+            self::setLastError(ROUTE_NOT_EXIST);
+
+        } 
+        elseif ($routeResult == \FastRoute\Dispatcher::METHOD_NOT_ALLOWED)
+        {
+            self::setLastError(METHOD_NOT_ALLOWED);
+
+        } 
+        elseif ($routeResult == \FastRoute\Dispatcher::FOUND)
+        {
+            if ($this->isMockedErrorRoute())
+            {
+                self::setLastError(Server::get('HTTP_MOCK_ERROR', 0));
+            } else {
                 $controller = $routeInfo[1];
                 $parameters = $routeInfo[2];
-                break;
+            }
         }
+
         self::$container->call($controller, $parameters);
+    }
+
+    private function isMockedErrorRoute()
+    {
+        $mockStatus = Server::get('HTTP_MOCK_STATUS', 0);
+        $mockError = Server::get('HTTP_MOCK_ERROR', 0);
+
+        return $mockStatus && $mockError;
     }
     
     abstract protected function initDb();

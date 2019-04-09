@@ -11,7 +11,7 @@ use Marmot\Framework\Classes\Server;
 /**
  * @codeCoverageIgnore
  */
-trait JsonApiView
+trait JsonApiTrait
 {
 
     private $links = [];
@@ -29,7 +29,8 @@ trait JsonApiView
         //分页总数
         $pages = @ceil($num / $perpage);
 
-        $url = !empty($conditions) ? $url.'/?'. urldecode(http_build_query($conditions)).'&' : $url.'/?';
+        $url = !empty($conditions) ? $url.'?'. urldecode(http_build_query($conditions)).'&' : $url.'?';
+
         //上一页,如果当前页数大于起始页(first), 则 $prev = 当前页数 - 1, 否则上一页 = 起始页
         //下一页,如果当前页数小于总页数, 则 $next = 当前页数 + 1,  否则下一页 = 总页数
         $prev = ($curpage > 1) ? $curpage - 1 : $curpage;
@@ -48,22 +49,22 @@ trait JsonApiView
     {
         $this->links  = [
                 Link::FIRST => $pages > 1 ? new Link(
-                    Server::host().'/'.$url.'page[number]=1&page[size]='.$perpage,
+                    Server::get('HTTP_HOST').'/'.$url.'page[number]=1&page[size]='.$perpage,
                     null,
                     true
                 ) : null,
                 Link::LAST  => $pages > 1 ? new Link(
-                    Server::host().'/'.$url.'page[number]='.$pages.'&page[size]='.$perpage,
+                    Server::get('HTTP_HOST').'/'.$url.'page[number]='.$pages.'&page[size]='.$perpage,
                     null,
                     true
                 ) : null,
                 Link::PREV  => ($pages > 1 && $curpage > 1) ? new Link(
-                    Server::host().'/'.$url.'page[number]='.$prev.'&page[size]='.$perpage,
+                    Server::get('HTTP_HOST').'/'.$url.'page[number]='.$prev.'&page[size]='.$perpage,
                     null,
                     true
                 ) : null,
                 Link::NEXT  => ($pages > 1 && $curpage < $pages) ? new Link(
-                    Server::host().'/'.$url.'page[number]='.$next.'&page[size]='.$perpage,
+                    Server::get('HTTP_HOST').'/'.$url.'page[number]='.$next.'&page[size]='.$perpage,
                     null,
                     true
                 ) : null,
@@ -98,7 +99,7 @@ trait JsonApiView
 
         $encoder = Encoder::instance(
             $objectsSchema,
-            new EncoderOptions(JSON_PRETTY_PRINT, Server::host())
+            new EncoderOptions(JSON_PRETTY_PRINT, Server::get('HTTP_HOST'))
         );
 
         return $encoder->withLinks($this->links)
