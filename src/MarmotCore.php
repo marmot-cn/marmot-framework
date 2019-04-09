@@ -152,7 +152,7 @@ abstract class MarmotCore
         $containerCache->setNamespace('phpcore');
         $containerBuilder->setDefinitionCache($containerCache);
 
-        $containerBuilder->writeProxiesToFile(true, $this->getAppPath().'Cache/proxies');
+        $containerBuilder->writeProxiesToFile(true, $this->getAppPath().'cache/proxies');
         //为容器设置配置文件
         $containerBuilder->addDefinitions($this->getAppPath().'config.'.$_ENV['APP_ENV'].'.php');
         //创建容器
@@ -183,7 +183,7 @@ abstract class MarmotCore
                 }
             },
             [
-                'cacheFile' => $this->getAppPath(). 'Cache/route.cache',
+                'cacheFile' => $this->getAppPath(). 'cache/route.cache',
                 'cacheDisabled' => self::$container->get('cache.route.disable'),
             ]
         );
