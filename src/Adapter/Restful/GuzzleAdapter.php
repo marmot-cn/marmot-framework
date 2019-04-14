@@ -2,7 +2,7 @@
 namespace Marmot\Framework\Adapter\Restful;
 
 use Marmot\Framework\Classes\Server;
-use Marmot\Framework\Classes\Translator;
+use Marmot\Framework\Interfaces\ITranslator;
 use Marmot\Framework\Interfaces\INull;
 use Marmot\Framework\Adapter\Restful\Repository\CacheResponseRepository;
 
@@ -30,7 +30,7 @@ abstract class GuzzleAdapter
 
     private $cacheResponseRepository;
 
-    public function __construct(string $baseurl)
+    public function __construct(string $baseurl = '', array $headers = array())
     {
         $options = [
             'base_uri'=>$baseurl,
@@ -46,11 +46,12 @@ abstract class GuzzleAdapter
             $options
         );
 
-        $this->requstHeaders = [
+        $this->requestHeaders = [
             'Accept-Encoding' => 'gzip',
             'Accept'=>'application/vnd.api+json',
             'Request-Id'=>Server::get('REQUEST_ID', '')
         ];
+        $this->requestHeaders = array_merge($this->requestHeaders, $headers);
 
         $this->cacheResponseRepository = new CacheResponseRepository();
     }
@@ -58,12 +59,12 @@ abstract class GuzzleAdapter
     public function __destruct()
     {
         unset($this->client);
-        unset($this->requstHeaders);
+        unset($this->requestHeaders);
         unset($this->responseHeaders);
         unset($this->cacheResponseRepository);
     }
 
-    abstract protected function getTranslator() : Translator;
+    abstract protected function getTranslator() : ITranslator;
 
     abstract public function scenario($scenario) : void;
 
@@ -104,12 +105,12 @@ abstract class GuzzleAdapter
 
     protected function setRequestHeaders(array $requestHeaders) : void
     {
-        $this->requstHeaders = $requestHeaders;
+        $this->requestHeaders = $requestHeaders;
     }
 
     protected function getRequestHeaders() : array
     {
-        return $this->requstHeaders;
+        return $this->requestHeaders;
     }
 
     protected function setResponseHeaders(array $responseHeaders) : void
@@ -125,6 +126,7 @@ abstract class GuzzleAdapter
     protected function get(string $url, array $query = array(), array $requestHeaders = array())
     {
         $response = $this->getResponse($url, $query, $requestHeaders);
+
         $this->formatResponse($response);
     }
 
@@ -253,35 +255,15 @@ abstract class GuzzleAdapter
         if ($this->getStatusCode() >= 200 && $this->getStatusCode() < 300) {
             return true;
         }
-        $this->translatError();
         return false;
     }
 
-    protected function translatError()
+    public function lastErrorInfo() : array
     {
-        $id = $this->getErrorId();
-        $pointer = $this->getErrorSource();
-        
-        $source = isset(self::SOURCE_MAPPING[$pointer]) ?
-        array('pointer' => self::SOURCE_MAPPING[$pointer]) :
-        array('pointer' => $pointer);
-        $apiErrors = include_once S_ROOT.'Application/apiErrorConfig.php';
-       
-        if (isset($apiErrors[$id])) {
-            Core::setLastError($apiErrors[$id], $source);
-        }
+        return $this->isSuccess() ? array() : $this->getContents();
     }
 
-    private function getErrorSource()
-    {
-        $contents = $this->getContents();
-    
-        return isset($contents['errors'][0]['source']['source']['pointer']) ?
-        $contents['errors'][0]['source']['source']['pointer'] :
-        '';
-    }
-
-    private function getErrorId()
+    public function lastErrorId() : int
     {
         $contents = $this->getContents();
 

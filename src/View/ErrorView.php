@@ -2,6 +2,7 @@
 namespace Marmot\Framework\View;
 
 use Marmot\Framework\Interfaces\IView;
+use Marmot\Framework\Classes\Server;
 use Marmot\Core;
 
 use Neomerx\JsonApi\Encoder\Encoder;
@@ -36,7 +37,7 @@ class ErrorView implements IView
 
         return Encoder::instance(
             array(),
-            new EncoderOptions(JSON_PRETTY_PRINT, $_SERVER['HTTP_HOST'])
+            new EncoderOptions(JSON_PRETTY_PRINT, Server::get('HTTP_HOST'))
         )->encodeError($error);
     }
 }
