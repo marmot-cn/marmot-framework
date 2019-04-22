@@ -2,7 +2,7 @@
 namespace Marmot\Framework\Query;
 
 use Marmot\Framework\Classes;
-use Marmot\Framework\Interfaces;
+use Marmot\Framework\Interfaces\DbLayer;
 
 /**
  * RowQuery文件,abstract抽象类.所有针对数据库行处理不需要缓存的类需要继承该类.
@@ -14,13 +14,12 @@ use Marmot\Framework\Interfaces;
  */
 abstract class RowQuery
 {
-
     use RowQueryFindable;
     
     private $primaryKey;//主键在数据库中的命名,行缓存和数据库的交互使用主键
     private $dbLayer;//数据层
 
-    public function __construct(string $primaryKey, Interfaces\DbLayer $dbLayer)
+    public function __construct(string $primaryKey, DbLayer $dbLayer)
     {
         $this->primaryKey = $primaryKey;
         $this->dbLayer = $dbLayer;
@@ -37,12 +36,17 @@ abstract class RowQuery
         return $this->primaryKey;
     }
     
+    protected function getDbLayer() : DbLayer
+    {
+        return $this->dbLayer;
+    }
+
     /**
      * @param array $data 添加数据
      */
     public function add(array $data, $lasetInsertId = true)
     {
-        $result = $this->dbLayer->insert($data, $lasetInsertId);
+        $result = $this->getDbLayer()->insert($data, $lasetInsertId);
 
         if (!$result) {
             return false;
@@ -56,7 +60,7 @@ abstract class RowQuery
      */
     public function update($data, array $condition)
     {
-        $row = $this->dbLayer->update($data, $condition);
+        $row = $this->getDbLayer()->update($data, $condition);
         if (!$row) {
             return false;
         }
@@ -64,11 +68,21 @@ abstract class RowQuery
     }
     
     /**
+     * @param array $condition 删除条件 | 默认为主键
+     */
+    public function delete(array $condition)
+    {
+        $row = $this->getDbLayer()->delete($condition);
+
+        return empty($row) ? false : true;
+    }
+
+    /**
      * @param int $id,主键id
      */
     public function getOne($id)
     {
-        $mysqlData = $this->dbLayer->select($this->primaryKey.'='.$id, '*');
+        $mysqlData = $this->getDbLayer()->select($this->getPrimaryKey().'='.$id, '*');
         //如果数据为空,返回false
         if (empty($mysqlData) || !isset($mysqlData[0])) {
             return false;
@@ -89,14 +103,14 @@ abstract class RowQuery
             return false;
         }
 
-        $rows = $this->dbLayer->select($this->primaryKey.' in (' . implode(',', $ids) . ')', '*');
+        $rows = $this->getDbLayer()->select($this->getPrimaryKey().' in (' . implode(',', $ids) . ')', '*');
         
         $resArray = array();
         if ($rows) {
             //按该页要显示的id排序
             $result = array();
             foreach ($rows as $val) {
-                $result[$val[$this->primaryKey]] = $val;
+                $result[$val[$this->getPrimaryKey()]] = $val;
             }
             //按照传入id列表初始顺序排序
             foreach ($ids as $val) {

@@ -13,7 +13,7 @@ class NullCommandHandlerTest extends TestCase
 
     public function setUp()
     {
-        $this->nullCommandHandler = new NullCommandHandler();
+        $this->nullCommandHandler = NullCommandHandler::getInstance();
     }
 
     public function testImplementsICommandHandler()

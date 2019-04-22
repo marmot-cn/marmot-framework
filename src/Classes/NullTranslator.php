@@ -3,13 +3,16 @@ namespace Marmot\Framework\Classes;
 
 use Marmot\Framework\Interfaces\ITranslator;
 use Marmot\Framework\Interfaces\INull;
-
 use Marmot\Core;
 
 class NullTranslator implements ITranslator, INull
 {
     private static $instance;
     
+    private function __constructor()
+    {
+    }
+
     public static function &getInstance()
     {
         if (!self::$instance instanceof self) {

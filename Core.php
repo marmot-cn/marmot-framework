@@ -47,7 +47,7 @@ class Core extends \Marmot\Framework\MarmotCore
         $this->initError();
     }
 
-    private function initApplication()
+    protected function initApplication() : void
     {
         $this->application = new MockApplication();
     }

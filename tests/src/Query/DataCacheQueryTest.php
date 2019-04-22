@@ -8,6 +8,7 @@ use Prophecy\Argument;
 class DataCacheQueryTest extends TestCase
 {
     private $dataCacheQuery;
+    
     private $cacheLayer;
 
     public function setUp()

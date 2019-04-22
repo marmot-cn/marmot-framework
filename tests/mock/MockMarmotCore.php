@@ -5,9 +5,14 @@ use Marmot\Framework\Application\IApplication;
 
 class MockMarmotCore extends \Marmot\Framework\MarmotCore
 {
+    protected function initApplication() : void
+    {
+        $this->application = new MockApplication();
+    }
+
     protected function getApplication() : IApplication
     {
-        return new MockApplication();
+        return $this->application;
     }
 
     public function initEnv()
@@ -30,6 +35,7 @@ class MockMarmotCore extends \Marmot\Framework\MarmotCore
 
     protected function getAppPath() : string
     {
+        return '';
     }
 
     protected function initAutoload()

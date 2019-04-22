@@ -50,7 +50,7 @@ abstract class Db implements DbLayer
      * 插入数据操作,给表里插入一条数据
      * @param array $insertSqlArr 需要插入数据库的数据数组
      */
-    public function insert($insertSqlArr, $returnLastInsertId = true) : int
+    public function insert($insertSqlArr, $returnLastInsertId = true)
     {
         $rows = $this->getDbDriver()->insert($this->tname(), $insertSqlArr);
         if (!$rows) {
@@ -69,6 +69,7 @@ abstract class Db implements DbLayer
     public function select(string $sql, string $select = '*', string $useIndex = '')
     {
         $sql = $sql == '' ? '' : ' WHERE ' . $sql;
+        $useIndex = $useIndex == '' ? '' : ' '.$useIndex.' ';
 
         $sqlstr = 'SELECT ' . $select . ' FROM ' . $this->tname() . $useIndex . $sql;
 

@@ -6,11 +6,9 @@ use Marmot\Framework\Interfaces\Observer;
 
 /**
  * @author chloroplast
- *
  */
 class Subject implements ISubject
 {
-    
     private $observers;
     
     public function __construct()
@@ -26,7 +24,7 @@ class Subject implements ISubject
     {
         return array_push($this->observers, $observer);
     }
- 
+    
     /**
      * 删除一个已注册过的观察者对象
      * @param Observer $observer

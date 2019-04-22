@@ -70,6 +70,18 @@ class DbTest extends TestCase
 
     public function testInsertFail()
     {
+        $insertSqlArr = array('insert');
+
+        $this->dbDriver->insert($this->db->tname(), $insertSqlArr)
+                    ->shouldBeCalledTimes(1)
+                    ->willReturn(0);
+
+         $this->db->expects($this->once())
+                 ->method('getDbDriver')
+                 ->willReturn($this->dbDriver->reveal());
+
+        $result = $this->db->insert($insertSqlArr);
+        $this->assertFalse($result);
     }
 
     public function testInsertWithLastInsertId()
@@ -78,14 +90,71 @@ class DbTest extends TestCase
 
     public function testInsertWithOutLastInsertId()
     {
+        $insertSqlArr = array('insert');
+
+        $this->dbDriver->insert($this->db->tname(), $insertSqlArr)
+                    ->shouldBeCalledTimes(1)
+                    ->willReturn(0);
+
+         $this->db->expects($this->once())
+                 ->method('getDbDriver')
+                 ->willReturn($this->dbDriver->reveal());
+
+        $result = $this->db->insert($insertSqlArr);
+        $this->assertFalse($result);
     }
 
     public function testUpdate()
     {
+        $whereSqlArr = $setSqlArr = array('update');
+
+        $this->dbDriver->update($this->db->tname(), $setSqlArr, $whereSqlArr)
+                    ->shouldBeCalledTimes(1)
+                    ->willReturn(true);
+
+        $this->db->expects($this->once())
+                 ->method('getDbDriver')
+                 ->willReturn($this->dbDriver->reveal());
+
+        $result = $this->db->update($setSqlArr, $whereSqlArr);
+        $this->assertTrue($result);
+    }
+
+    public function testUpdateFail()
+    {
+        $whereSqlArr = $setSqlArr = array('update');
+
+        $this->dbDriver->update($this->db->tname(), $setSqlArr, $whereSqlArr)
+                    ->shouldBeCalledTimes(1)
+                    ->willReturn(false);
+
+        $this->db->expects($this->once())
+                 ->method('getDbDriver')
+                 ->willReturn($this->dbDriver->reveal());
+
+        $result = $this->db->update($setSqlArr, $whereSqlArr);
+        $this->assertFalse($result);
     }
 
     public function testSelect()
     {
+        $expected = 'result';
+
+        $sql = 'sql';
+        $select = 'select';
+        $useIndex = 'index';
+        $combinedSql = 'SELECT ' . $select . ' FROM ' . $this->db->tname().' '.$useIndex.' '.' WHERE '.$sql;
+
+        $this->dbDriver->query($combinedSql)
+                    ->shouldBeCalledTimes(1)
+                    ->willReturn($expected);
+
+        $this->db->expects($this->once())
+                 ->method('getDbDriver')
+                 ->willReturn($this->dbDriver->reveal());
+
+        $result = $this->db->select($sql, $select, $useIndex);
+        $this->assertEquals($expected, $result);
     }
 
     /**

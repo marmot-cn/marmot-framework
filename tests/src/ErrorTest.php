@@ -38,8 +38,8 @@ class ErrorTest extends TestCase
             array(NOT_ACCEPTABLE_MEDIA_TYPE, 5, 406),
             array(INCORRECT_RAW_BODY, 6, 400),
             array(RESOURCE_NOT_EXIST, 10, 404),
-            array(COMMAND_HANDLER_NOT_EXIST, 11, 404),
-            array(TRANSLATOR_NOT_EXIST, 12, 404),
+            array(COMMAND_HANDLER_NOT_EXIST, 11, 500),
+            array(TRANSLATOR_NOT_EXIST, 12, 500),
         ];
     }
 }

@@ -3,6 +3,7 @@ namespace Marmot\Framework\Adapter\Restful\Strategy;
 
 use Marmot\Framework\Interfaces\INull;
 use Marmot\Framework\Adapter\Restful\CacheResponse;
+use Marmot\Framework\Adapter\Restful\Repository\CacheResponseRepository;
 use Marmot\Core;
 
 use GuzzleHttp\Psr7\Response;
@@ -19,10 +20,14 @@ trait PeriodCacheStrategy
         return '304';
     }
 
+    abstract protected function getCacheResponseRepository() : CacheResponseRepository;
+
     protected function getTTL() : int
     {
         return Core::$container->has('cache.restful.ttl') ? Core::$container->get('cache.restful.ttl') : 300;
-    } protected function getWithCache(string $url, array $query = array(), array $requestHeaders = array())
+    }
+
+    protected function getWithCache(string $url, array $query = array(), array $requestHeaders = array())
     {
         $key = md5($this->getPrefix().$url.serialize($query).serialize($requestHeaders));
         $cacheResponse = $this->getCacheResponseRepository()->get($key);

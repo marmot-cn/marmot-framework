@@ -93,7 +93,7 @@ return array(
         array(
             'id'=>COMMAND_HANDLER_NOT_EXIST,
             'link'=>'',
-            'status'=>404,
+            'status'=>500,
             'code'=>COMMAND_HANDLER_NOT_EXIST,
             'title'=>'Command handler not exist',
             'detail'=>'Command handler not exist',
@@ -104,10 +104,32 @@ return array(
         array(
             'id'=>TRANSLATOR_NOT_EXIST,
             'link'=>'',
-            'status'=>404,
+            'status'=>500,
             'code'=>TRANSLATOR_NOT_EXIST,
             'title'=>'Translator not exist',
-            'detail'=>'Translator  handler not exist',
+            'detail'=>'Translator handler not exist',
+            'source'=>array(),
+            'meta'=>array()
+        ),
+    OBSERVER_NOT_EXIST=>
+        array(
+            'id'=>OBSERVER_NOT_EXIST,
+            'link'=>'',
+            'status'=>500,
+            'code'=>OBSERVER_NOT_EXIST,
+            'title'=>'Observer not exist',
+            'detail'=>'Observer not exist',
+            'source'=>array(),
+            'meta'=>array()
+        ),
+    SUBJECT_NOT_EXIST=>
+        array(
+            'id'=>SUBJECT_NOT_EXIST,
+            'link'=>'',
+            'status'=>500,
+            'code'=>SUBJECT_NOT_EXIST,
+            'title'=>'Subject not exist',
+            'detail'=>'Subject not exist',
             'source'=>array(),
             'meta'=>array()
         ),

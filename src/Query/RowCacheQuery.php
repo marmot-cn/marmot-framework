@@ -19,7 +19,6 @@ use Marmot\Framework\Interfaces\CacheLayer;
 
 abstract class RowCacheQuery
 {
-
     use RowQueryFindable;
 
     protected $primaryKey;//查询键值在数据库中的命名,行缓存和数据库的交互使用键值
@@ -63,10 +62,10 @@ abstract class RowCacheQuery
     public function add(array $data, $lasetInsertId = true)
     {
         $result = $this->getDbLayer()->insert($data, $lasetInsertId);
-
         if (!$result) {
             return false;
         }
+        
         return $result;
     }
 
@@ -76,7 +75,7 @@ abstract class RowCacheQuery
      */
     public function update(array $data, array $condition)
     {
-        $cacheKey = $condition[$this->primaryKey];
+        $cacheKey = $condition[$this->getPrimaryKey()];
         
         $row = $this->getDbLayer()->update($data, $condition);
         if (!$row) {
@@ -88,7 +87,6 @@ abstract class RowCacheQuery
     }
     
     /**
-     * @param array $data 删除数据
      * @param array $condition 删除条件 | 默认为主键
      */
     public function delete(array $condition)
@@ -99,7 +97,7 @@ abstract class RowCacheQuery
         }
 
         //更新缓存
-        $cacheKey = $condition[$this->primaryKey];
+        $cacheKey = $condition[$this->getPrimaryKey()];
         $this->getCacheLayer()->del($cacheKey);
         return true;
     }
@@ -117,7 +115,7 @@ abstract class RowCacheQuery
         }
 
         //如果没有数据,去数据库查询根据primaryKey 和 id
-        $mysqlData = $this->getDbLayer()->select($this->primaryKey.'='.$id, '*');
+        $mysqlData = $this->getDbLayer()->select($this->getPrimaryKey().'='.$id, '*');
         //如果数据为空,返回false
         if (empty($mysqlData) || !isset($mysqlData[0])) {
             return false;
@@ -143,11 +141,11 @@ abstract class RowCacheQuery
 
         if ($miss) {
                 //未缓存数据从数据库读取
-            $missRows = $this->getDbLayer()->select($this->primaryKey.' in (' . implode(',', $miss) . ')', '*');
+            $missRows = $this->getDbLayer()->select($this->getPrimaryKey().' in (' . implode(',', $miss) . ')', '*');
             if ($missRows) {
                 foreach ($missRows as $val) {
                     //添加memcache缓存数据
-                    $this->getCacheLayer()->save($val[$this->primaryKey], $val);
+                    $this->getCacheLayer()->save($val[$this->getPrimaryKey()], $val);
                 }
                 $hits = array_merge($hits, $missRows);
             }
@@ -158,7 +156,7 @@ abstract class RowCacheQuery
             //按该页要显示的id排序
             $result = array();
             foreach ($hits as $val) {
-                $result[$val[$this->primaryKey]] = $val;
+                $result[$val[$this->getPrimaryKey()]] = $val;
             }
             //按照传入id列表初始顺序排序
             foreach ($ids as $val) {

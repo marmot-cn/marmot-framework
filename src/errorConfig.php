@@ -39,3 +39,11 @@ define('COMMAND_HANDLER_NOT_EXIST', 11);
  * 翻译器不存在
  */
 define('TRANSLATOR_NOT_EXIST', 12);
+/**
+ * 观察者不存在
+ */
+define('OBSERVER_NOT_EXIST', 13);
+/**
+ * subject不存在
+ */
+define('SUBJECT_NOT_EXIST', 14);

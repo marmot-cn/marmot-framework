@@ -12,9 +12,32 @@ class Filter
             }
             return $string;
         }
+
         return addslashes($string);
     }
     
+    public static function replacenlPlus($string)
+    {
+        if (is_array($string)) {
+            foreach ($string as $key => $val) {
+                $string[$key] = Filter::replacenlPlus($val);
+            }
+            return $string;
+        }
+
+        return Filter::replacenl($string);
+    }
+
+    //取消\r\n \r \n
+    public static function replacenl($string)
+    {
+        $order = array("\r\n","\n","\r");
+        $replace = '';
+        $string = str_replace($order, $replace, $string);
+
+        return $string;
+    }
+
     //trim加强版
     public static function trimPlus($string)
     {
@@ -124,6 +147,7 @@ class Filter
             $allowattributes = 'target,src,width,height,alt,title,size,face,color,align,style,class,rel,rev';
             $html = Filter::stripTagsAttributesPlus($html, $allowtags, $allowattributes);
             
+            $html = Filter::replacenlPlus($html);
             $html = Filter::htmlspecialcharsPlus($html);
             $html = Filter::addslashesPlus($html);
         }

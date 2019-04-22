@@ -25,6 +25,10 @@ class CommandBusTest extends TestCase
         $this->commandHandlerFactory = $this->prophesize(ICommandHandlerFactory::class);
         $this->command = $this->prophesize(ICommand::class);
         $this->transaction = $this->prophesize(Transaction::class);
+        $this->commandBus= $this->getMockBuilder(CommandBus::class)
+                                ->setMethods(['getTransaction', 'getCommandHandlerFactory'])
+                                ->setConstructorArgs([$this->commandHandlerFactory->reveal()])
+                                ->getMock();
     }
 
     public function tearDown()
@@ -35,6 +39,7 @@ class CommandBusTest extends TestCase
         unset($this->transaction);
     }
     
+
     /**
      * 1. getTransaction() 需要调用一次
      * 2. getCommandHandlerFactory() 需要调用一次
@@ -59,10 +64,6 @@ class CommandBusTest extends TestCase
         )->shouldBeCalledTimes(1)
          ->willReturn($commandHandler->reveal());
 
-        $this->commandBus= $this->getMockBuilder(CommandBus::class)
-                                ->setMethods(['getTransaction', 'getCommandHandlerFactory'])
-                                ->setConstructorArgs([$this->commandHandlerFactory->reveal()])
-                                ->getMock();
         $this->commandBus->expects($this->once())
                          ->method('getCommandHandlerFactory')
                          ->willReturn($this->commandHandlerFactory->reveal());
@@ -100,10 +101,6 @@ class CommandBusTest extends TestCase
         )->shouldBeCalledTimes(1)
          ->willReturn($commandHandler->reveal());
 
-        $this->commandBus= $this->getMockBuilder(CommandBus::class)
-                                ->setMethods(['getTransaction', 'getCommandHandlerFactory'])
-                                ->setConstructorArgs([$this->commandHandlerFactory->reveal()])
-                                ->getMock();
         $this->commandBus->expects($this->once())
                          ->method('getCommandHandlerFactory')
                          ->willReturn($this->commandHandlerFactory->reveal());
@@ -115,33 +112,6 @@ class CommandBusTest extends TestCase
 
         $this->assertFalse($result);
         $this->assertEquals(ERROR_NOT_DEFINED, Core::getLastError()->getId());
-    }
-
-    public function testNullCommandHandler()
-    {
-        $commandHandler = $this->getMockBuilder(NullCommandHandler::class)
-                               ->getMock();
-
-        $this->commandHandlerFactory->getHandler(
-            Argument::exact($this->command)
-        )->shouldBeCalledTimes(1)
-         ->willReturn($commandHandler);
-
-        $this->commandBus= $this->getMockBuilder(CommandBus::class)
-                         ->setMethods(['getTransaction', 'getCommandHandlerFactory'])
-                         ->setConstructorArgs([$this->commandHandlerFactory->reveal()])
-                         ->getMock();
-
-        $this->commandBus->expects($this->once())
-                         ->method('getCommandHandlerFactory')
-                         ->willReturn($this->commandHandlerFactory->reveal());
-        
-        $this->commandBus->expects($this->exactly(0))
-                         ->method('getTransaction');
-
-        $result = $this->commandBus->send($this->command->reveal());
-        $this->assertFalse($result);
-        $this->assertEquals(COMMAND_HANDLER_NOT_EXIST, Core::getLastError()->getId());
     }
 
     /**
@@ -169,10 +139,6 @@ class CommandBusTest extends TestCase
         )->shouldBeCalledTimes(1)
          ->willReturn($commandHandler->reveal());
 
-        $this->commandBus= $this->getMockBuilder(CommandBus::class)
-                                ->setMethods(['getTransaction', 'getCommandHandlerFactory'])
-                                ->setConstructorArgs([$this->commandHandlerFactory->reveal()])
-                                ->getMock();
         $this->commandBus->expects($this->once())
                          ->method('getCommandHandlerFactory')
                          ->willReturn($this->commandHandlerFactory->reveal());
@@ -183,5 +149,27 @@ class CommandBusTest extends TestCase
         $result = $this->commandBus->send($this->command->reveal());
         
         $this->assertTrue($result);
+    }
+
+    public function testNullCommandHandler()
+    {
+        $commandHandler = $this->getMockBuilder(NullCommandHandler::class)
+                               ->getMock();
+
+        $this->commandHandlerFactory->getHandler(
+            Argument::exact($this->command)
+        )->shouldBeCalledTimes(1)
+         ->willReturn($commandHandler);
+
+        $this->commandBus->expects($this->once())
+                         ->method('getCommandHandlerFactory')
+                         ->willReturn($this->commandHandlerFactory->reveal());
+        
+        $this->commandBus->expects($this->exactly(0))
+                         ->method('getTransaction');
+
+        $result = $this->commandBus->send($this->command->reveal());
+        $this->assertFalse($result);
+        $this->assertEquals(COMMAND_HANDLER_NOT_EXIST, Core::getLastError()->getId());
     }
 }

@@ -2,6 +2,8 @@
 namespace Marmot\Framework\Classes;
 
 use Marmot\Framework\Observer\Subject;
+use Marmot\Framework\Observer\NullSubject;
+use Marmot\Framework\Interfaces\Subject as ISubject;
 use Marmot\Framework\Interfaces\Observer;
 use Marmot\Core;
 
@@ -12,19 +14,19 @@ use Marmot\Core;
  */
 class Transaction
 {
-    private $transactionSubject;
+    protected $transactionSubject;
 
-    private $dbDriver;
+    protected $dbDriver;
 
-    private static $instance;
+    protected static $instance;
     /**
      * 这里没有使用PDO::inTransaction,因为数据库连接已经设置为延迟加载.
      * 如果调用此方法需要初始化一次数据库连接.
      * 所以这里用程序来判断.
      */
-    private $inTransaction = false;//true 当前事务开启 false 当前事务关闭
+    protected $inTransaction = false;//true 当前事务开启 false 当前事务关闭
 
-    private function __construct()
+    protected function __construct()
     {
         $this->inTransaction = false;
         $this->transactionSubject = new Subject();
@@ -46,7 +48,7 @@ class Transaction
         return self::$instance;
     }
 
-    protected function getTransactionSubject() : Subject
+    protected function getTransactionSubject() : ISubject
     {
         return $this->transactionSubject;
     }
@@ -83,7 +85,13 @@ class Transaction
     {
         $this->getTransactionSubject()->notifyObserver();
         $this->inTransaction = false;//关闭事务
-        $this->transactionSubject = null;//释放subject
+        $this->resetTransactionSubject();//释放subject
         return $this->getDbDriver()->rollBack();
+    }
+
+    protected function resetTransactionSubject() : bool
+    {
+        $this->transactionSubject = new NullSubject();
+        return true;
     }
 }

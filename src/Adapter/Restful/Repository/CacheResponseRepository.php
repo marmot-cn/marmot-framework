@@ -29,7 +29,6 @@ class CacheResponseRepository implements ICacheResponseAdapter
         return $this->adapter;
     }
 
-
     public function save(string $key, Response $response, int $ttl = 0) : bool
     {
         return $this->getAdapter()->save($key, $response, $ttl);

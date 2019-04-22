@@ -3,8 +3,7 @@ namespace Marmot\Framework\Interfaces;
 
 interface IErrorAdapter
 {
-	public function lastErrorId() : int;
+    public function lastErrorId() : int;
 
-	public function lastErrorInfo() : array;
+    public function lastErrorInfo() : array;
 }
-

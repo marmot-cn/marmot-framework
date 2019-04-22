@@ -197,20 +197,12 @@ abstract class MarmotCore
 
         $routeResult = $routeInfo[0];
 
-        if ($routeResult == \FastRoute\Dispatcher::NOT_FOUND)
-        {
+        if ($routeResult == \FastRoute\Dispatcher::NOT_FOUND) {
             self::setLastError(ROUTE_NOT_EXIST);
-
-        } 
-        elseif ($routeResult == \FastRoute\Dispatcher::METHOD_NOT_ALLOWED)
-        {
+        } elseif ($routeResult == \FastRoute\Dispatcher::METHOD_NOT_ALLOWED) {
             self::setLastError(METHOD_NOT_ALLOWED);
-
-        } 
-        elseif ($routeResult == \FastRoute\Dispatcher::FOUND)
-        {
-            if ($this->isMockedErrorRoute())
-            {
+        } elseif ($routeResult == \FastRoute\Dispatcher::FOUND) {
+            if ($this->isMockedErrorRoute()) {
                 self::setLastError(Server::get('HTTP_MOCK_ERROR', 0));
             } else {
                 $controller = $routeInfo[1];

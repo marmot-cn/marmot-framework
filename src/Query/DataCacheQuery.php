@@ -13,7 +13,6 @@ use Marmot\Framework\Interfaces\CacheLayer;
 
 abstract class DataCacheQuery
 {
-
     private $cacheLayer;//缓存层
 
     public function __construct(CacheLayer $cacheLayer)

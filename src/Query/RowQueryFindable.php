@@ -1,8 +1,12 @@
 <?php
 namespace Marmot\Framework\Query;
 
+use Marmot\Framework\Interfaces\DbLayer;
+
 trait RowQueryFindable
 {
+    abstract protected function getDbLayer() : DbLayer;
+
      /**
      * 根据条件查询匹配到条件的id数组
      *
@@ -17,7 +21,7 @@ trait RowQueryFindable
         if ($size > 0) {
             $condition = $condition.' LIMIT '.$offset.','.$size;
         }
-        return $this->dbLayer->select($condition, $this->primaryKey);
+        return $this->getDbLayer()->select($condition, $this->primaryKey);
     }
 
     /**
@@ -27,7 +31,7 @@ trait RowQueryFindable
      */
     public function count(string $condition)
     {
-        $count = $this->dbLayer->select($condition, 'COUNT(*) as count');
+        $count = $this->getDbLayer()->select($condition, 'COUNT(*) as count');
         return $count[0]['count'];
     }
 }

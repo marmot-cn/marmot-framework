@@ -6,16 +6,13 @@ use Marmot\Framework\Interfaces\ITranslator;
 use Marmot\Framework\Interfaces\INull;
 use Marmot\Framework\Adapter\Restful\Repository\CacheResponseRepository;
 
-use GuzzleHttp;
+use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 
 use Marmot\Core;
 
 abstract class GuzzleAdapter
 {
-    const SOURCE_MAPPING = array(
-    );
-
     private $client;
 
     protected $scenario;
@@ -37,23 +34,23 @@ abstract class GuzzleAdapter
             'http_errors'=>false,
             'timeout'=>5
         ];
-
         if (Core::$container->has('guzzle.handler')) {
             $options['handler'] = Core::$container->get('guzzle.handler');
         }
-
-        $this->client = new GuzzleHttp\Client(
+        $this->client = new Client(
             $options
         );
-
         $this->requestHeaders = [
             'Accept-Encoding' => 'gzip',
             'Accept'=>'application/vnd.api+json',
             'Request-Id'=>Server::get('REQUEST_ID', '')
         ];
         $this->requestHeaders = array_merge($this->requestHeaders, $headers);
-
+        $this->responseHeaders = [];
         $this->cacheResponseRepository = new CacheResponseRepository();
+        $this->scenario = [];
+        $this->contents = [];
+        $this->statusCode = 200;
     }
 
     public function __destruct()
@@ -62,18 +59,24 @@ abstract class GuzzleAdapter
         unset($this->requestHeaders);
         unset($this->responseHeaders);
         unset($this->cacheResponseRepository);
+        unset($this->scenario);
+        unset($this->contents);
+        unset($this->statusCode);
     }
 
     abstract protected function getTranslator() : ITranslator;
 
-    abstract public function scenario($scenario) : void;
+    public function scenario($scenario): void
+    {
+        $this->scenario = $scenario;
+    }
 
     protected function getCacheResponseRepository() : CacheResponseRepository
     {
         return $this->cacheResponseRepository;
     }
 
-    protected function getClient()
+    protected function getClient() : Client
     {
         return $this->client;
     }
@@ -118,7 +121,7 @@ abstract class GuzzleAdapter
         $this->responseHeaders = $responseHeaders;
     }
 
-    protected function getResponseHeaders(array $responseHeaders) : array
+    protected function getResponseHeaders() : array
     {
         return $this->responseHeaders;
     }
@@ -307,7 +310,7 @@ abstract class GuzzleAdapter
         return $this->scenario;
     }
 
-    private function clearScenario() : void
+    protected function clearScenario() : void
     {
         $this->scenario = array();
     }

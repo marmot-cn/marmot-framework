@@ -3,6 +3,7 @@ namespace Marmot\Framework\Adapter\Restful\Strategy;
 
 use Marmot\Framework\Interfaces\INull;
 use Marmot\Framework\Adapter\Restful\CacheResponse;
+use Marmot\Framework\Adapter\Restful\Repository\CacheResponseRepository;
 
 use GuzzleHttp\Psr7\Response;
 
@@ -17,6 +18,8 @@ trait EtagCacheStrategy
     {
         return '304';
     }
+
+    abstract protected function getCacheResponseRepository() : CacheResponseRepository;
 
     protected function getWithCache(string $url, array $query = array(), array $requestHeaders = array())
     {
