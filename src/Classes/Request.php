@@ -229,6 +229,17 @@ class Request
         return $this->getBodyParam($name, $defaultValue);
     }
 
+    public function delete($name = null, $defaultValue = null)
+    {
+        if (!$this->isDeleteMethod()) {
+            return null;
+        }
+        if ($name === null) {
+            return $this->getBodyParams();
+        }
+        return $this->getBodyParam($name, $defaultValue);
+    }
+
     /**
      * Sets the request [[queryString]] parameters.
      * @param array $values the request query parameters (name-value pairs)
@@ -285,7 +296,7 @@ class Request
         if ($this->bodyParams === null) {
             //兼容HTTP_X_HTTP_METHOD_OVERRIDE
             $this->bodyParams = [];
-            if ($this->isPostMethod() || $this->isPutMethod() || $this->isPatchMethod()) {
+            if ($this->isPostMethod() || $this->isPutMethod() || $this->isPatchMethod() || $this->isDeleteMethod()) {
                 // PHP has already parsed the body so we have all params in $_POST
                 if (!empty($_POST)) {
                     $this->bodyParams = $_POST;
