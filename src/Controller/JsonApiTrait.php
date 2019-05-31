@@ -51,13 +51,14 @@ trait JsonApiTrait
     {
         $parameters = $this->getParameters();
 
-        if (isset($parameters->getPaginationParameters()['number'])) {
-            $page = $parameters->getPaginationParameters()['number'];
-        }
-        if (isset($parameters->getPaginationParameters()['size'])) {
-            $size = $parameters->getPaginationParameters()['size'];
-        }
-        $perpage = !empty($size) ? $size : 20;
+        $page = isset($parameters->getPaginationParameters()['number']) ?
+                   $parameters->getPaginationParameters()['number'] :
+                   1;
+        $size = isset($parameters->getPaginationParameters()['size']) ?
+                   $parameters->getPaginationParameters()['size'] :
+                   20;
+
+        $perpage = isset($size) ? $size : 20;
         $curpage = !empty($page) ? $page : 1;
 
         $filter = is_array($parameters->getFilteringParameters()) ?
