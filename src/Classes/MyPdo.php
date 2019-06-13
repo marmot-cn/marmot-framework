@@ -250,7 +250,11 @@ class MyPdo
         foreach ($data as $key => $val) {
             if (is_array($val)) {
                 $colsArr[] = $key;
-                $valsArr[] = "'".json_encode($val, JSON_UNESCAPED_UNICODE)."'";
+
+                $val = json_encode(Filter::stripslashesPlus($val), JSON_UNESCAPED_UNICODE);
+                $val = Filter::addslashesPlus($val);
+
+                $valsArr[] = "'".$val."'";
             } else {
                 $colsStr[] = $key;
                 $valsStr[] = "'".$this->addsla($val)."'";
