@@ -277,7 +277,10 @@ class MyPdo
         $set = array();
         foreach ($data as $key => $val) {
             if (is_array($val)) {
-                $set[] = $key."='".json_encode($val, JSON_UNESCAPED_UNICODE)."'";
+                $val = json_encode(Filter::stripslashesPlus($val), JSON_UNESCAPED_UNICODE);
+                $val = Filter::addslashesPlus($val);
+
+                $set[] = $key."='".$val."'";
             } else {
                 $set[] = $key."='".trim($this->addsla($val))."'";
             }
