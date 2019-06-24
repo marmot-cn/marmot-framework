@@ -2,7 +2,7 @@
 namespace Marmot\Framework\Adapter\Restful;
 
 use Marmot\Framework\Classes\NullTranslator;
-use Marmot\Framework\Interfaces\ITranslator;
+use Marmot\Framework\Interfaces\IRestfulTranslator;
 use Marmot\Framework\Interfaces\INull;
 use Marmot\Framework\Adapter\Restful\Repository\CacheResponseRepository;
 
@@ -13,7 +13,7 @@ use Marmot\Core;
 
 class MockGuzzleAdapter extends GuzzleAdapter
 {
-    protected function getTranslator() : ITranslator
+    protected function getTranslator() : IRestfulTranslator
     {
         return new NullTranslator();
     }
@@ -96,5 +96,60 @@ class MockGuzzleAdapter extends GuzzleAdapter
     public function isSuccess() : bool
     {
         return parent::isSuccess();
+    }
+
+    public function get(string $url, array $query = array(), array $requestHeaders = array())
+    {
+        return parent::get($url, $query, $requestHeaders);
+    }
+
+    public function getAsync(string $url, array $query = array(), array $requestHeaders = array())
+    {
+        return parent::getAsync($url, $query, $requestHeaders);
+    }
+
+    public function translateToObject($object = null)
+    {
+        return parent::translateToObject($object);
+    }
+
+    public function translateToObjects()
+    {
+        return parent::translateToObjects();
+    }
+
+    public function getResponse(string $url, array $query = array(), array $requestHeaders = array())
+    {
+        return parent::getResponse($url, $query, $requestHeaders);
+    }
+
+    public function getAsyncPromise(string $url, array $query = array(), array $requestHeaders = array())
+    {
+        return parent::getAsyncPromise($url, $query, $requestHeaders);
+    }
+
+    public function put(string $url, array $data = array(), array $requestHeaders = array())
+    {
+        return parent::put($url, $data, $requestHeaders);
+    }
+
+    public function patch(string $url, array $data = array(), array $requestHeaders = array())
+    {
+        return parent::patch($url, $data, $requestHeaders);
+    }
+
+    public function post(string $url, array $data = array(), array $requestHeaders = array())
+    {
+        return parent::post($url, $data, $requestHeaders);
+    }
+
+    public function delete(string $url, array $data = array(), array $requestHeaders = array())
+    {
+        return parent::delete($url, $data, $requestHeaders);
+    }
+
+    public function formatResponse($response) : void
+    {
+        parent::formatResponse($response);
     }
 }

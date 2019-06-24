@@ -7,7 +7,6 @@ namespace Marmot\Framework\Interfaces;
  */
 interface ITranslator
 {
-    
     public function arrayToObject(array $expression, $object = null);
 
     public function objectToArray($object, array $keys = array());

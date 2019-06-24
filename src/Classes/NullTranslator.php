@@ -9,7 +9,7 @@ class NullTranslator implements ITranslator, INull
 {
     private static $instance;
     
-    private function __constructor()
+    private function __construct()
     {
     }
 
@@ -37,8 +37,8 @@ class NullTranslator implements ITranslator, INull
 
     public function objectToArray($object, array $keys = array())
     {
-        unset($expression);
         unset($object);
+        unset($keys);
 
         return $this->translatorNotExist();
     }

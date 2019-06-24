@@ -11,7 +11,7 @@ class NullCommandHandler implements ICommandHandler, INull
 {
     private static $instance;
     
-    private function __constructor()
+    private function __construct()
     {
     }
 

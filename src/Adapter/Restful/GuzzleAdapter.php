@@ -2,7 +2,7 @@
 namespace Marmot\Framework\Adapter\Restful;
 
 use Marmot\Framework\Classes\Server;
-use Marmot\Framework\Interfaces\ITranslator;
+use Marmot\Framework\Interfaces\IRestfulTranslator;
 use Marmot\Framework\Interfaces\INull;
 use Marmot\Framework\Adapter\Restful\Repository\CacheResponseRepository;
 
@@ -64,7 +64,7 @@ abstract class GuzzleAdapter
         unset($this->statusCode);
     }
 
-    abstract protected function getTranslator() : ITranslator;
+    abstract protected function getTranslator() : IRestfulTranslator;
 
     public function scenario($scenario): void
     {
@@ -133,9 +133,14 @@ abstract class GuzzleAdapter
         $this->formatResponse($response);
     }
 
+    /**
+     * 这里单独抽离获取response, 是为了给缓存策略使用
+     * 缓存策略针对上层封装getWithCache()
+     * 下层调用getResponse
+     */
     protected function getResponse(string $url, array $query = array(), array $requestHeaders = array())
     {
-        $requestHeaders = array_merge($requestHeaders, $this->getRequestHeaders());
+        $requestHeaders = array_merge($this->getRequestHeaders(), $requestHeaders);
         $query = array_merge($this->getScenario(), $query);
 
         $this->clearScenario();
@@ -163,7 +168,7 @@ abstract class GuzzleAdapter
 
     protected function getAsyncPromise(string $url, array $query = array(), array $requestHeaders = array())
     {
-        $requestHeaders = array_merge($requestHeaders, $this->getRequestHeaders());
+        $requestHeaders = array_merge($this->getRequestHeaders(), $requestHeaders);
         $query = array_merge($this->getScenario(), $query);
 
         $this->clearScenario();
@@ -179,7 +184,7 @@ abstract class GuzzleAdapter
 
     protected function put(string $url, array $data = array(), array $requestHeaders = array())
     {
-        $requestHeaders = array_merge($requestHeaders, $this->getRequestHeaders());
+        $requestHeaders = array_merge($this->getRequestHeaders(), $requestHeaders);
 
         try {
             $response = $this->getClient()->put(
@@ -198,7 +203,7 @@ abstract class GuzzleAdapter
 
     protected function patch(string $url, array $data = array(), array $requestHeaders = array())
     {
-        $requestHeaders = array_merge($requestHeaders, $this->getRequestHeaders());
+        $requestHeaders = array_merge($this->getRequestHeaders(), $requestHeaders);
 
         try {
             $response = $this->getClient()->patch(
@@ -217,8 +222,7 @@ abstract class GuzzleAdapter
 
     protected function post(string $url, array $data = array(), array $requestHeaders = array())
     {
-        $contentTypeHeader = ['Content-Type' => 'application/vnd.api+json'];
-        $requestHeaders = array_merge_recursive($requestHeaders, $this->getRequestHeaders(), $contentTypeHeader);
+        $requestHeaders = array_merge_recursive($this->getRequestHeaders(), $requestHeaders);
 
         try {
             $response = $this->getClient()->post(
@@ -235,15 +239,16 @@ abstract class GuzzleAdapter
         $this->formatResponse($response);
     }
 
-    protected function delete(string $url, array $requestHeaders = array())
+    protected function delete(string $url, array $data = array(), array $requestHeaders = array())
     {
-        $requestHeaders = array_merge($requestHeaders, $this->getRequestHeaders());
+        $requestHeaders = array_merge($this->getRequestHeaders(), $requestHeaders);
 
         try {
             $response = $this->getClient()->delete(
                 $url,
                 [
-                    'headers'=>$requestHeaders
+                    'headers'=>$requestHeaders,
+                    'json'=>$data
                 ]
             );
         } catch (RequestException $e) {

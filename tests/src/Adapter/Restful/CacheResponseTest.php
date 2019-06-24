@@ -12,10 +12,12 @@ class CacheResponseTest extends TestCase
     {
         $this->stub = new CacheResponse(200, 'content', ['headers'], 10);
     }
+
     public function tearDown()
     {
         unset($this->stub);
     }
+
     public function testExtendsResponse()
     {
         $this->assertInstanceOf(
@@ -23,6 +25,7 @@ class CacheResponseTest extends TestCase
             $this->stub
         );
     }
+
     public function testGetHeaders()
     {
         $this->assertEquals(
@@ -30,6 +33,7 @@ class CacheResponseTest extends TestCase
             $this->stub->getHeaders()
         );
     }
+
     public function testGetStatusCode()
     {
         $this->assertEquals(
@@ -37,6 +41,7 @@ class CacheResponseTest extends TestCase
             $this->stub->getStatusCode()
         );
     }
+
     public function testGetContents()
     {
         $this->assertEquals(
@@ -44,11 +49,20 @@ class CacheResponseTest extends TestCase
             $this->stub->getBody()->getContents()
         );
     }
+
     public function testGetTTL()
     {
         $this->assertEquals(
             10,
             $this->stub->getTTL()
         );
+    }
+
+    public function testSetTTL()
+    {
+        $expectedTTL = 10;
+
+        $this->stub->setTTL($expectedTTL);
+        $this->assertEquals($expectedTTL, $this->stub->getTTL());
     }
 }

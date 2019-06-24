@@ -209,6 +209,62 @@ class RowCacheQueryTest extends TestCase
         $this->assertFalse($result);
     }
 
+    /**
+     * 测试 fetchOne
+     * 1. 测试传参$id
+     * 2. getOne 接收传参 $id, 调用一次
+     * 3. 返回 getOne 调用结果
+     */
+    public function testFetchOne()
+    {
+        $rowCacheQuery = $this->getMockBuilder(RowCacheQuery::class)
+                                ->setMethods(
+                                    [
+                                        'getOne'
+                                    ]
+                                )->disableOriginalConstructor()
+                                ->getMock();
+
+        $expectedId = 1;
+        $expectedResult = 'result';
+
+        $rowCacheQuery->expects($this->once(1))
+                      ->method('getOne')
+                      ->with($expectedId)
+                      ->willReturn($expectedResult);
+        
+        $result = $rowCacheQuery->fetchOne($expectedId);
+        $this->assertEquals($expectedResult, $result);
+    }
+
+    /**
+     * 测试 fetchList
+     * 1. 测试传参$ids
+     * 2. getList 接收传参 $ids, 调用一次
+     * 3. 返回 getList 调用结果
+     */
+    public function testFetchList()
+    {
+        $rowCacheQuery = $this->getMockBuilder(RowCacheQuery::class)
+                                ->setMethods(
+                                    [
+                                        'getList'
+                                    ]
+                                )->disableOriginalConstructor()
+                                ->getMock();
+
+        $expectedIds = '1,2,3';
+        $expectedResult = 'result';
+
+        $rowCacheQuery->expects($this->once(1))
+                      ->method('getList')
+                      ->with($expectedIds)
+                      ->willReturn($expectedResult);
+        
+        $result = $rowCacheQuery->fetchList($expectedIds);
+        $this->assertEquals($expectedResult, $result);
+    }
+
     private function bindMockGetPrimaryKey()
     {
         $this->rowCacheQuery->expects($this->once())

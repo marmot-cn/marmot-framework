@@ -93,12 +93,16 @@ abstract class RowQuery
         return $mysqlData;
     }
 
+    public function fetchOne($id)
+    {
+        return $this->getOne($id);
+    }
+
     /**
      * 批量获取缓存
      */
     public function getList($ids)
     {
-
         if (empty($ids) || !is_array($ids)) {
             return false;
         }
@@ -121,5 +125,10 @@ abstract class RowQuery
             unset($result);
         }
         return $resArray;
+    }
+
+    public function fetchList($ids)
+    {
+        return $this->getList($ids);
     }
 }

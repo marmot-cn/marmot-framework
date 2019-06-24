@@ -6,7 +6,6 @@ use GuzzleHttp\Psr7\Response;
 
 class GuzzleConcurrentAdapter
 {
-
     private $promises;
     private $adapters;
 

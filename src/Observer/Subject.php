@@ -15,6 +15,11 @@ class Subject implements ISubject
     {
         $this->observers = array();
     }
+
+    public function __destruct()
+    {
+        unset($this->observers);
+    }
  
     /**
      * 增加一个新的观察者对象
@@ -25,34 +30,33 @@ class Subject implements ISubject
         return array_push($this->observers, $observer);
     }
     
+    protected function getObservers() : array
+    {
+        return $this->observers;
+    }
+
     /**
      * 删除一个已注册过的观察者对象
      * @param Observer $observer
      */
     public function detach(Observer $observer) : bool
     {
-        $index = array_search($observer, $this->observers);
-        if ($index === false || ! array_key_exists($index, $this->observers)) {
+        $index = array_search($observer, $this->getObservers(), true);
+        if ($index === false || ! array_key_exists($index, $this->getObservers())) {
             return false;
         }
  
-        unset($this->observers[$index]);
+        array_splice($this->observers, $index, 1);
         return true;
     }
  
     /**
      * 通知所有注册过的观察者对象
      */
-    public function notifyObserver() : bool
+    public function notifyObserver()
     {
-        if (!is_array($this->observers)) {
-            return false;
-        }
- 
-        foreach ($this->observers as $observer) {
+        foreach ($this->getObservers() as $observer) {
             $observer->update();
         }
-
-        return true;
     }
 }

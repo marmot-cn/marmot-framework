@@ -128,6 +128,11 @@ abstract class RowCacheQuery
         return $mysqlData;
     }
 
+    public function fetchOne($id)
+    {
+        return $this->getOne($id);
+    }
+
     /**
      * 批量获取缓存
      */
@@ -167,5 +172,10 @@ abstract class RowCacheQuery
             unset($result);
         }
         return $resArray;
+    }
+
+    public function fetchList($ids)
+    {
+        return $this->getList($ids);
     }
 }
