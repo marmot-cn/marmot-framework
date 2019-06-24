@@ -157,6 +157,7 @@ class CommandBusTest extends TestCase
     public function testNullCommandHandler()
     {
         $commandHandler = $this->getMockBuilder(NullCommandHandler::class)
+                               ->disableOriginalConstructor()
                                ->getMock();
 
         $this->commandHandlerFactory->getHandler(
