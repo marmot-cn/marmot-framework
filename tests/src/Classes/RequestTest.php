@@ -404,4 +404,391 @@ class RequestTest extends TestCase
         $this->request->setMediaTypeStrategy($testMediaTypeStrategy);
         $this->assertSame($testMediaTypeStrategy, $this->request->getMediaTypeStrategy());
     }
+
+    /**
+     * 测试testGetWithNullName()
+     * 1. 参数 $name = null
+     * 2. 触发 $this->getQueryParams(), 返回 $expectedResult
+     * 3. 返回 $expectedResult
+     */
+    public function testGetWithNullName()
+    {
+        $request  = $this->getMockBuilder(Request::class)
+                                ->setMethods(
+                                    [
+                                        'getQueryParams',
+                                    ]
+                                )->disableOriginalConstructor()
+                                ->getMock();
+
+        $expectedResult = 'result';
+        $request->expects($this->once())
+                ->method('getQueryParams')
+                ->willReturn($expectedResult);
+
+        $result = $request->get(null);
+        $this->assertEquals($expectedResult, $result);
+    }
+
+    /**
+     * 测试testGetWithoutNullName()
+     * 1. 参数 $name = $expectedName
+     * 2. 参数 $defaultValue = $expectedDefaultValue
+     * 3. 触发 $this->getQueryParam($expectedName, $expectedDefaultValue) 一次, 返回 $expectedResult
+     */
+    public function testGetWithoutNullName()
+    {
+        $request = $this->getMockBuilder(Request::class)
+                        ->setMethods(
+                            ['getQueryParam']
+                        )->disableOriginalConstructor()
+                        ->getMock();
+
+        $expectedName = 'name';
+        $expectedDefaultValue = 'defaultValue';
+        $expectedResult = 'result';
+
+        $request->expects($this->once())
+                ->method('getQueryParam')
+                ->with($expectedName, $expectedDefaultValue)
+                ->willReturn($expectedResult);
+
+        $result = $request->get($expectedName, $expectedDefaultValue);
+    }
+
+    /**
+     * 测试 testPostWithNotPostMethod()
+     * 1. mock isPostMethod 返回 false
+     * 2. 测试 post() 返回 null
+     */
+    public function testPostWithNotPostMethod()
+    {
+        $request = $this->getMockBuilder(Request::class)
+                        ->setMethods(
+                            ['isPostMethod']
+                        )->disableOriginalConstructor()
+                        ->getMock();
+
+        $request->expects($this->once())
+                ->method('isPostMethod')
+                ->willReturn(false);
+
+        $result = $request->post();
+        $this->assertNull($result);
+    }
+
+    /**
+     * 测试 testPostWithNullName
+     * 1. mock isPostMethod 返回 true
+     * 2. 触发 $this->getBodyParams(), 返回 $expectedResult
+     * 3. 返回 $expectedResult
+     */
+    public function testPostWithNullName()
+    {
+        $request = $this->getMockBuilder(Request::class)
+                        ->setMethods(
+                            ['isPostMethod', 'getBodyParams']
+                        )->disableOriginalConstructor()
+                        ->getMock();
+
+        $request->expects($this->once())
+                ->method('isPostMethod')
+                ->willReturn(true);
+
+        $expectedResult = 'result';
+        $request->expects($this->once())
+                ->method('getBodyParams')
+                ->willReturn($expectedResult);
+
+        $result = $request->post();
+        $this->assertEquals($expectedResult, $result);
+    }
+
+    /**
+     * 测试 testPostWithName
+     * 1. mock isPostMethod 返回 true
+     * 2. 触发 $this->getBodyParam($expectedName, $expectedDefaultValue), 返回 $expectedResult
+     * 3. 返回 $expectedResult
+     */
+    public function testPostWithName()
+    {
+        $request = $this->getMockBuilder(Request::class)
+                        ->setMethods(
+                            ['isPostMethod', 'getBodyParam']
+                        )->disableOriginalConstructor()
+                        ->getMock();
+
+        $request->expects($this->once())
+                ->method('isPostMethod')
+                ->willReturn(true);
+
+        $expectedName = 'name';
+        $expectedDefaultValue = 'defaultValue';
+        $expectedResult = 'result';
+        $request->expects($this->once())
+               ->method('getBodyParam')
+               ->with($expectedName, $expectedDefaultValue)
+               ->willReturn($expectedResult);
+
+        $result = $request->post($expectedName, $expectedDefaultValue);
+        $this->assertEquals($expectedResult, $result);
+    }
+
+    /**
+     * 测试 testPutWithNotPutMethod()
+     * 1. mock isPutMethod 返回 false
+     * 2. 测试 post() 返回 null
+     */
+    public function testPutWithNotPutMethod()
+    {
+        $request = $this->getMockBuilder(Request::class)
+                        ->setMethods(
+                            ['isPutMethod']
+                        )->disableOriginalConstructor()
+                        ->getMock();
+
+        $request->expects($this->once())
+                ->method('isPutMethod')
+                ->willReturn(false);
+
+        $result = $request->put();
+        $this->assertNull($result);
+    }
+
+    /**
+     * 测试 testPutWithNullName
+     * 1. mock isPutMethod 返回 true
+     * 2. 触发 $this->getBodyParams(), 返回 $expectedResult
+     * 3. 返回 $expectedResult
+     */
+    public function testPutWithNullName()
+    {
+        $request = $this->getMockBuilder(Request::class)
+                        ->setMethods(
+                            ['isPutMethod', 'getBodyParams']
+                        )->disableOriginalConstructor()
+                        ->getMock();
+
+        $request->expects($this->once())
+                ->method('isPutMethod')
+                ->willReturn(true);
+
+        $expectedResult = 'result';
+        $request->expects($this->once())
+                ->method('getBodyParams')
+                ->willReturn($expectedResult);
+
+        $result = $request->put();
+        $this->assertEquals($expectedResult, $result);
+    }
+
+    /**
+     * 测试 testPutWithName
+     * 1. mock isPutMethod 返回 true
+     * 2. 触发 $this->getBodyParam($expectedName, $expectedDefaultValue), 返回 $expectedResult
+     * 3. 返回 $expectedResult
+     */
+    public function testPutWithName()
+    {
+        $request = $this->getMockBuilder(Request::class)
+                        ->setMethods(
+                            ['isPutMethod', 'getBodyParam']
+                        )->disableOriginalConstructor()
+                        ->getMock();
+
+        $request->expects($this->once())
+                ->method('isPutMethod')
+                ->willReturn(true);
+
+        $expectedName = 'name';
+        $expectedDefaultValue = 'defaultValue';
+        $expectedResult = 'result';
+        $request->expects($this->once())
+               ->method('getBodyParam')
+               ->with($expectedName, $expectedDefaultValue)
+               ->willReturn($expectedResult);
+
+        $result = $request->put($expectedName, $expectedDefaultValue);
+        $this->assertEquals($expectedResult, $result);
+    }
+
+    /**
+     * 测试 testPatchWithNotPatchMethod()
+     * 1. mock isPatchMethod 返回 false
+     * 2. 测试 post() 返回 null
+     */
+    public function testPatchWithNotPatchMethod()
+    {
+        $request = $this->getMockBuilder(Request::class)
+                        ->setMethods(
+                            ['isPatchMethod']
+                        )->disableOriginalConstructor()
+                        ->getMock();
+
+        $request->expects($this->once())
+                ->method('isPatchMethod')
+                ->willReturn(false);
+
+        $result = $request->patch();
+        $this->assertNull($result);
+    }
+
+    /**
+     * 测试 testPatchWithNullName
+     * 1. mock isPatchMethod 返回 true
+     * 2. 触发 $this->getBodyParams(), 返回 $expectedResult
+     * 3. 返回 $expectedResult
+     */
+    public function testPatchWithNullName()
+    {
+        $request = $this->getMockBuilder(Request::class)
+                        ->setMethods(
+                            ['isPatchMethod', 'getBodyParams']
+                        )->disableOriginalConstructor()
+                        ->getMock();
+
+        $request->expects($this->once())
+                ->method('isPatchMethod')
+                ->willReturn(true);
+
+        $expectedResult = 'result';
+        $request->expects($this->once())
+                ->method('getBodyParams')
+                ->willReturn($expectedResult);
+
+        $result = $request->patch();
+        $this->assertEquals($expectedResult, $result);
+    }
+
+    /**
+     * 测试 testPatchWithName
+     * 1. mock isPatchMethod 返回 true
+     * 2. 触发 $this->getBodyParam($expectedName, $expectedDefaultValue), 返回 $expectedResult
+     * 3. 返回 $expectedResult
+     */
+    public function testPatchWithName()
+    {
+        $request = $this->getMockBuilder(Request::class)
+                        ->setMethods(
+                            ['isPatchMethod', 'getBodyParam']
+                        )->disableOriginalConstructor()
+                        ->getMock();
+
+        $request->expects($this->once())
+                ->method('isPatchMethod')
+                ->willReturn(true);
+
+        $expectedName = 'name';
+        $expectedDefaultValue = 'defaultValue';
+        $expectedResult = 'result';
+        $request->expects($this->once())
+               ->method('getBodyParam')
+               ->with($expectedName, $expectedDefaultValue)
+               ->willReturn($expectedResult);
+
+        $result = $request->patch($expectedName, $expectedDefaultValue);
+        $this->assertEquals($expectedResult, $result);
+    }
+
+    /**
+     * 测试 testDeleteWithNotDeleteMethod()
+     * 1. mock isDeleteMethod 返回 false
+     * 2. 测试 post() 返回 null
+     */
+    public function testDeleteWithNotDeleteMethod()
+    {
+        $request = $this->getMockBuilder(Request::class)
+                        ->setMethods(
+                            ['isDeleteMethod']
+                        )->disableOriginalConstructor()
+                        ->getMock();
+
+        $request->expects($this->once())
+                ->method('isDeleteMethod')
+                ->willReturn(false);
+
+        $result = $request->delete();
+        $this->assertNull($result);
+    }
+
+    /**
+     * 测试 testDeleteWithNullName
+     * 1. mock isDeleteMethod 返回 true
+     * 2. 触发 $this->getBodyParams(), 返回 $expectedResult
+     * 3. 返回 $expectedResult
+     */
+    public function testDeleteWithNullName()
+    {
+        $request = $this->getMockBuilder(Request::class)
+                        ->setMethods(
+                            ['isDeleteMethod', 'getBodyParams']
+                        )->disableOriginalConstructor()
+                        ->getMock();
+
+        $request->expects($this->once())
+                ->method('isDeleteMethod')
+                ->willReturn(true);
+
+        $expectedResult = 'result';
+        $request->expects($this->once())
+                ->method('getBodyParams')
+                ->willReturn($expectedResult);
+
+        $result = $request->delete();
+        $this->assertEquals($expectedResult, $result);
+    }
+
+    /**
+     * 测试 testDeleteWithName
+     * 1. mock isDeleteMethod 返回 true
+     * 2. 触发 $this->getBodyParam($expectedName, $expectedDefaultValue), 返回 $expectedResult
+     * 3. 返回 $expectedResult
+     */
+    public function testDeleteWithName()
+    {
+        $request = $this->getMockBuilder(Request::class)
+                        ->setMethods(
+                            ['isDeleteMethod', 'getBodyParam']
+                        )->disableOriginalConstructor()
+                        ->getMock();
+
+        $request->expects($this->once())
+                ->method('isDeleteMethod')
+                ->willReturn(true);
+
+        $expectedName = 'name';
+        $expectedDefaultValue = 'defaultValue';
+        $expectedResult = 'result';
+        $request->expects($this->once())
+               ->method('getBodyParam')
+               ->with($expectedName, $expectedDefaultValue)
+               ->willReturn($expectedResult);
+
+        $result = $request->delete($expectedName, $expectedDefaultValue);
+        $this->assertEquals($expectedResult, $result);
+    }
+
+    /**
+     * 测试 testValidate
+     * 1. 触发validateMediaTypes执行一次, 返回 true
+     * 2. validate 返回 true
+     */
+    public function testValidate()
+    {
+        $request = $this->getMockBuilder(Request::class)
+                        ->setMethods(
+                            ['getMediaTypeStrategy']
+                        )->disableOriginalConstructor()
+                        ->getMock();
+
+        $mediaTypeStrategy = $this->prophesize(IMediaTypeStrategy::class);
+        $mediaTypeStrategy->validate($request)->shouldBeCalledTimes(1)->willReturn(true);
+
+        $request->expects($this->once())
+                ->method('getMediaTypeStrategy')
+                ->willReturn($mediaTypeStrategy->reveal());
+
+        $result = $request->validate();
+        $this->assertTrue($result);
+    }
 }

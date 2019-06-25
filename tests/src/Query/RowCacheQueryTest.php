@@ -210,6 +210,113 @@ class RowCacheQueryTest extends TestCase
     }
 
     /**
+     * 测试getOneWithExistCacheData
+     * 1. mock rowCacheQuery, mock getCacheLayer
+     * 2. 预测 cacheLayer 执行 get() 一次, 入参 $expectedId, 返回 $expectedCacheData
+     * 3. 测试getOne() 返回结果和 $expectedCacheData
+     */
+    public function testGetOneWithExistCacheData()
+    {
+        $expectedId = 1;
+        $expectedCacheData = array('cacheData');
+        
+        $this->cacheLayer->get($expectedId)
+                         ->shouldBeCalledTimes(1)
+                         ->willReturn($expectedCacheData);
+
+        $this->bindMockCacheLayer();
+
+        $result = $this->rowCacheQuery->getOne($expectedId);
+        $this->assertEquals($expectedCacheData, $result);
+    }
+
+    /**
+     * 测试getOneWithEmptyDbData
+     * 1. mock rowCacheQuery, mock 函数 getCacheLayer, getDbLayer, getPrimaryKey
+     * 2. 预测 cacheLayer 执行 get() 一次, 入参 $expectedId, 返回 $expectedCacheData
+     * 3. getPrimaryKey 预测执行一次, 返回 $this->primarykey
+     * 4. getDbLayer 预测执行 select 一次, 入参
+     *   4.1 $primaryKey.'='.$expectedId
+     *   4.2 *
+     * 5. getDbLayer 返回空数组
+     * 6. getOne 结果是否为 false
+     */
+    public function testGetOneWithEmptyDbData()
+    {
+        $expectedId = 1;
+        $expectedCacheData = array();
+        
+        $this->cacheLayer->get($expectedId)
+                         ->shouldBeCalledTimes(1)
+                         ->willReturn($expectedCacheData);
+        $this->bindMockCacheLayer();
+
+        $expectedDbData = array();
+        $this->dbLayer->select(
+            Argument::exact($this->primaryKey.'='.$expectedId),
+            Argument::exact('*')
+        )->shouldBeCalledTimes(1)
+        ->willReturn($expectedDbData);
+        $this->bindMockDbLayer();
+
+        $this->bindMockGetPrimaryKey();
+
+        $result = $this->rowCacheQuery->getOne($expectedId);
+        $this->assertFalse($result);
+    }
+
+    /**
+     * 测试getOneWithDbData()
+     *
+     * 1. mock rowCacheQuery, mock 函数 getCacheLayer, getDbLayer, getPrimaryKey
+     * 2. 预测 cacheLayer 执行 get() 一次, 入参 $expectedId, 返回 $expectedCacheData
+     * 3. getPrimaryKey 预测执行一次, 返回 $this->primarykey
+     * 4. getDbLayer 预测执行 select 一次, 入参
+     *   4.1 $primaryKey.'='.$expectedId
+     *   4.2 *
+     * 5. getDbLayer 返回 $expectedResult
+     * 6. getOne 结果是否为 $expectedResult[0]
+     */
+    public function testGetOneWithDbData()
+    {
+        $expectedId = 1;
+        $expectedCacheData = array();
+        
+        $this->cacheLayer->get($expectedId)
+                         ->shouldBeCalledTimes(1)
+                         ->willReturn($expectedCacheData);
+        $this->bindMockCacheLayer();
+
+        $expectedDbData = array(array('data'));
+        $this->cacheLayer->save($expectedId, $expectedDbData[0])
+            ->shouldBeCalledTimes(1);
+
+        $this->dbLayer->select(
+            Argument::exact($this->primaryKey.'='.$expectedId),
+            Argument::exact('*')
+        )->shouldBeCalledTimes(1)
+        ->willReturn($expectedDbData);
+        $this->bindMockDbLayer();
+
+        $this->bindMockGetPrimaryKey();
+
+        $result = $this->rowCacheQuery->getOne($expectedId);
+        $this->assertEquals($expectedDbData[0], $result);
+    }
+
+    /**
+     * 测试 getListWithEmptyIds
+     * 1. 测试 $ids 为空, 返回false
+     */
+    public function testGetListWithEmptyIds()
+    {
+        $emptyIds = array();
+
+        $result = $this->rowCacheQuery->getList($emptyIds);
+        $this->assertFalse($result);
+    }
+
+    /**
      * 测试 fetchOne
      * 1. 测试传参$id
      * 2. getOne 接收传参 $id, 调用一次

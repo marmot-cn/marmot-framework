@@ -2,6 +2,7 @@
 namespace Marmot\Framework\Adapter\Restful\Strategy;
 
 use Marmot\Framework\Adapter\Restful\Repository\CacheResponseRepository;
+use Marmot\Framework\Adapter\Restful\CacheResponse;
 
 use GuzzleHttp\Psr7\Response;
 

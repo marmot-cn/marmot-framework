@@ -3,6 +3,7 @@ namespace Marmot\Framework\Adapter\Restful\Strategy;
 
 use Marmot\Framework\Adapter\Restful\Strategy\MockEtagCacheStrategy;
 use Marmot\Framework\Adapter\Restful\Strategy\EtagCacheStrategy;
+use Marmot\Framework\Adapter\Restful\CacheResponse;
 use Marmot\Framework\Adapter\Restful\Repository\CacheResponseRepository;
 
 use GuzzleHttp\Psr7\Response;
@@ -59,5 +60,26 @@ class EtagCacheStrategyTest extends TestCase
 
         $result = $this->strategy->refreshCache($key, $response);
         $this->assertTrue($result);
+    }
+
+    /**
+     * 测试 testGetEtagWithoutEtagHeaders
+     */
+    public function testGetEtagWithoutEtagHeaders()
+    {
+        $cacheResponse = new CacheResponse(200, 'contents', []);
+        $result = $this->mockStrategy->getPublicEtag($cacheResponse);
+        $this->assertEmpty($result);
+    }
+
+    /**
+     * 测试 testGetEtagWithExistEtagHeaders
+     */
+    public function testGetEtagWithExistEtagHeaders()
+    {
+        $expectedEtag = 'etag';
+        $cacheResponse = new CacheResponse(200, 'contents', ['ETag'=>[$expectedEtag]]);
+        $result = $this->mockStrategy->getPublicEtag($cacheResponse);
+        $this->assertEquals($expectedEtag, $result);
     }
 }

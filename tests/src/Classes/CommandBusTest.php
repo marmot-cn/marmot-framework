@@ -42,7 +42,6 @@ class CommandBusTest extends TestCase
         unset($this->transaction);
     }
     
-
     /**
      * 1. getTransaction() 需要调用一次
      * 2. getCommandHandlerFactory() 需要调用一次

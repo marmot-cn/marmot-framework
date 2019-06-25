@@ -31,7 +31,7 @@ abstract class RowQuery
         unset($this->dbLayer);
     }
 
-    public function getPrimaryKey()
+    public function getPrimaryKey() : string
     {
         return $this->primaryKey;
     }

@@ -4,6 +4,7 @@ namespace Marmot\Framework\Adapter\Restful\Strategy;
 use Marmot\Framework\Adapter\Restful\Strategy\MockPeriodCacheStrategy;
 use Marmot\Framework\Adapter\Restful\Strategy\PeriodCacheStrategy;
 use Marmot\Framework\Adapter\Restful\Repository\CacheResponseRepository;
+use Marmot\Framework\Adapter\Restful\CacheResponse;
 
 use GuzzleHttp\Psr7\Response;
 
@@ -42,5 +43,26 @@ class PeriodCacheStrategyTest extends TestCase
     {
         $result = $this->mockStrategy->isPublicResponseCached(new Response(304));
         $this->assertTrue($result);
+    }
+
+    /**
+     * 测试 testGetEtagWithoutEtagHeaders
+     */
+    public function testGetEtagWithoutEtagHeaders()
+    {
+        $cacheResponse = new CacheResponse(200, 'contents', []);
+        $result = $this->mockStrategy->getPublicEtag($cacheResponse);
+        $this->assertEmpty($result);
+    }
+
+    /**
+     * 测试 testGetEtagWithExistEtagHeaders
+     */
+    public function testGetEtagWithExistEtagHeaders()
+    {
+        $expectedEtag = 'etag';
+        $cacheResponse = new CacheResponse(200, 'contents', ['ETag'=>[$expectedEtag]]);
+        $result = $this->mockStrategy->getPublicEtag($cacheResponse);
+        $this->assertEquals($expectedEtag, $result);
     }
 }

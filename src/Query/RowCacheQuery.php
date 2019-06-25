@@ -41,7 +41,7 @@ abstract class RowCacheQuery
         unset($this->dbLayer);
     }
 
-    public function getPrimaryKey()
+    public function getPrimaryKey() : string
     {
         return $this->primaryKey;
     }
@@ -107,8 +107,9 @@ abstract class RowCacheQuery
      */
     public function getOne($id)
     {
+        $cacheLayer = $this->getCacheLayer();
         //查询缓存中是否有数据,根据id
-        $cacheData = $this->getCacheLayer()->get($id);
+        $cacheData = $cacheLayer->get($id);
         //如果有数据,返回
         if ($cacheData) {
             return $cacheData;
@@ -123,7 +124,7 @@ abstract class RowCacheQuery
 
         $mysqlData = $mysqlData[0];
         //数据存入缓存
-        $this->getCacheLayer()->save($id, $mysqlData);
+        $cacheLayer->save($id, $mysqlData);
         //返回数据
         return $mysqlData;
     }

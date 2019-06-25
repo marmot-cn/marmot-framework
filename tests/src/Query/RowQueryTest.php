@@ -156,6 +156,83 @@ class RowQueryTest extends TestCase
     }
 
     /**
+     * 测试 getOne() 返回空
+     * 1. mock RowCacheQuery, mock 函数 getDbLayer, getPrimaryKey
+     * 2. getPrimaryKey 预测执行一次, 返回 $this->primarykey
+     * 3. getDbLayer 预测执行 select 一次, 入参
+     *   3.1 $primaryKey.'='.$expectedId
+     *   3.2 *
+     * 4. getDbLayer 返回空数组
+     * 5. getOne 结果是否为 false
+     */
+    public function testGetOneEmptyResult()
+    {
+        $rowQuery = $this->getMockBuilder(RowQuery::class)
+                                ->setMethods(
+                                    [
+                                        'getDbLayer',
+                                        'getPrimaryKey'
+                                    ]
+                                )->disableOriginalConstructor()
+                                ->getMock();
+
+        $expectedId = 1;
+        $expectedData = array();
+
+        $this->dbLayer->select(
+            Argument::exact($this->primaryKey.'='.$expectedId),
+            Argument::exact('*')
+        )->shouldBeCalledTimes(1)
+        ->willReturn($expectedData);
+
+        $this->bindMockDbLayer();
+        $this->bindMockGetPrimaryKey();
+
+        $result = $this->rowQuery->getOne($expectedId);
+        $this->assertFalse($result);
+    }
+
+    /**
+     * 测试 getOne() 返回不为空的结果
+     * 1. mock RowCacheQuery, mock 函数 getDbLayer, getPrimaryKey
+     * 2. getPrimaryKey 预测执行一次, 返回 $this->primarykey
+     * 3. getDbLayer 预测执行 select 一次, 入参
+     *   3.1 $primaryKey.'='.$expectedId
+     *   3.2 *
+     * 4. getDbLayer 返回 $expectedResult
+     * 5. getOne 结果是否为 $expectedResult[0]
+     */
+    public function testGetOneWithResult()
+    {
+        $expectedId = 1;
+        $expectedData = array(array('result'));
+
+        $this->dbLayer->select(
+            Argument::exact($this->primaryKey.'='.$expectedId),
+            Argument::exact('*')
+        )->shouldBeCalledTimes(1)
+        ->willReturn($expectedData);
+
+        $this->bindMockDbLayer();
+        $this->bindMockGetPrimaryKey();
+
+        $result = $this->rowQuery->getOne($expectedId);
+        $this->assertEquals($expectedData[0], $result);
+    }
+
+    /**
+     * 测试 getListWithEmptyIds
+     * 1. 测试 $ids 为空, 返回false
+     */
+    public function testGetListWithEmptyIds()
+    {
+        $emptyIds = array();
+
+        $result = $this->rowQuery->getList($emptyIds);
+        $this->assertFalse($result);
+    }
+
+    /**
      * 测试 fetchOne
      * 1. 测试传参$id
      * 2. getOne 接收传参 $id, 调用一次
@@ -191,7 +268,7 @@ class RowQueryTest extends TestCase
      */
     public function testFetchList()
     {
-        $rowCacheQuery = $this->getMockBuilder(RowCacheQuery::class)
+        $rowCacheQuery = $this->getMockBuilder(RowQuery::class)
                                 ->setMethods(
                                     [
                                         'getList'

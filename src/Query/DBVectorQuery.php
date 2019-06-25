@@ -54,6 +54,7 @@ class DBVectorQuery extends VectorQuery
         if (empty($condition)) {
             $condition = '1';
         }
+
         if ($size > 0) {
             $condition = $condition.' LIMIT '.$offset.','.$size;
         }

@@ -47,8 +47,8 @@ abstract class MarmotCore
         $this->initAutoload();
         $this->initApplication();
         $this->initContainer();//引入容器
-        $this->initCache();//初始化缓存使用
         $this->initEnv();//初始化环境
+        $this->initCache();//初始化缓存使用
         $this->initDb();//初始化mysql
         $this->initError();
         $this->initRoute();

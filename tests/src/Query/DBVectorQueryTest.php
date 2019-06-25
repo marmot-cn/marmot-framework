@@ -3,6 +3,7 @@ namespace Marmot\Framework\Query;
 
 use PHPUnit\Framework\TestCase;
 use Marmot\Framework\Interfaces\DbLayer;
+use Marmot\Framework\Interfaces\MockDbLayer;
 use Prophecy\Argument;
 
 class DBVectorQueryTest extends TestCase
@@ -33,6 +34,14 @@ class DBVectorQueryTest extends TestCase
         $this->assertInstanceOf('Marmot\Framework\Query\DBVectorQuery', $this->dbVectorQuery);
     }
 
+    public function testGetDafaultDbLayer()
+    {
+        $dbLayer = new MockDbLayer();
+        $dbVectorQuery = new MockDBVectorQuery($dbLayer);
+        $result = $dbVectorQuery->getDbLayer();
+        $this->assertEquals($dbLayer, $result);
+    }
+
     public function testAdd()
     {
         $data = array('data');
@@ -44,9 +53,7 @@ class DBVectorQueryTest extends TestCase
         )->shouldBeCalledTimes(1)
         ->willReturn($expected);
 
-        $this->dbVectorQuery->expects($this->once())
-                             ->method('getDbLayer')
-                             ->willReturn($this->dbLayer->reveal());
+        $this->bindDbLayer();
 
         $actual = $this->dbVectorQuery->add($data);
         $this->assertTrue($expected, $actual);
@@ -77,5 +84,86 @@ class DBVectorQueryTest extends TestCase
             [true, true],
             [false, false]
         ];
+    }
+
+    /**
+     * 测试 testFindWithEmotyCondition()
+     */
+    public function testFindWithEmptyCondition()
+    {
+        $emptyCondition = '';
+        $expectedCondition = '1';
+        $expected = ['expected'];
+
+        $this->dbLayer->select(Argument::exact($expectedCondition), Argument::exact('*'))
+                      ->shouldBeCalledTimes(1)
+                      ->willReturn($expected);
+        $this->bindDbLayer();
+
+        $result = $this->dbVectorQuery->find($emptyCondition);
+        $this->assertEquals($expected, $result);
+    }
+
+    /**
+     * 测试 testFindWithCondition
+     */
+    public function testFindWithCondition()
+    {
+        $condition = $expectedCondition = 'condition';
+        $expected = ['expected'];
+
+        $this->dbLayer->select(Argument::exact($expectedCondition), Argument::exact('*'))
+                      ->shouldBeCalledTimes(1)
+                      ->willReturn($expected);
+        $this->bindDbLayer();
+
+        $result = $this->dbVectorQuery->find($condition);
+        $this->assertEquals($expected, $result);
+    }
+
+    /**
+     * 测试 testFindWithSize
+     */
+    public function testFindWithSize()
+    {
+        $size = 20;
+        $offset = 5;
+        $condition = 'condition';
+        $expected = ['expected'];
+        $expectedCondition = 'condition LIMIT '.$offset.','.$size;
+
+        $this->dbLayer->select(Argument::exact($expectedCondition), Argument::exact('*'))
+                      ->shouldBeCalledTimes(1)
+                      ->willReturn($expected);
+        $this->bindDbLayer();
+
+        $result = $this->dbVectorQuery->find($condition, $offset, $size);
+        $this->assertEquals($expected, $result);
+    }
+
+    /**
+     * testCount()
+     */
+    public function testCount()
+    {
+        $condition = $expectedCondition = '1';
+        $expectedSelect = 'COUNT(*) as count';
+        $expectedCount = 20;
+        $expectedResult = [['count'=>$expectedCount]];
+
+        $this->dbLayer->select($expectedCondition, $expectedSelect)
+                      ->shouldBeCalledTimes(1)
+                      ->willReturn($expectedResult);
+
+        $this->bindDbLayer();
+        $result = $this->dbVectorQuery->count($condition);
+        $this->assertEquals($expectedCount, $result);
+    }
+
+    private function bindDbLayer()
+    {
+        $this->dbVectorQuery->expects($this->once())
+                             ->method('getDbLayer')
+                             ->willReturn($this->dbLayer->reveal());
     }
 }

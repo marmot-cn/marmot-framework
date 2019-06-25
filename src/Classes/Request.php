@@ -5,7 +5,6 @@ namespace Marmot\Framework\Classes;
 use Marmot\Core;
 use Marmot\Framework\Classes\Filter;
 use Marmot\Framework\Interfaces\IMediaTypeStrategy;
-use Marmot\Framework\Interfaces\IValidateStrategy;
 use Marmot\Framework\Strategy\MediaTypes\JsonapiStrategy;
 
 /**
@@ -186,7 +185,6 @@ class Request
      */
     public function post($name = null, $defaultValue = null)
     {
-
         if (!$this->isPostMethod()) {
             return null;
         }
@@ -206,7 +204,6 @@ class Request
      */
     public function put($name = null, $defaultValue = null)
     {
-
         if (!$this->isPutMethod()) {
             return null;
         }
@@ -369,7 +366,7 @@ class Request
      *
      * @param array $rules
      */
-    public function validate(array $rules = array()) : bool
+    public function validate() : bool
     {
         return $this->validateMediaTypes();
     }

@@ -6,6 +6,8 @@ use Marmot\Framework\Interfaces\DbLayer;
 trait RowQueryFindable
 {
     abstract protected function getDbLayer() : DbLayer;
+    
+    abstract protected function getPrimaryKey() : string;
 
      /**
      * 根据条件查询匹配到条件的id数组
@@ -18,6 +20,10 @@ trait RowQueryFindable
      */
     public function find(string $condition, int $offset, int $size)
     {
+        if (empty($condition)) {
+            $condition = '1';
+        }
+
         if ($size > 0) {
             $condition = $condition.' LIMIT '.$offset.','.$size;
         }
