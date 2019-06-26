@@ -28,6 +28,64 @@ class RowQueryFindableTest extends TestCase
     }
 
     /**
+     * testFindWithEmptyCondition
+     */
+    public function testFindWithEmptyCondition()
+    {
+        $emptyCondition = '';
+        $expectedCondition = '1';
+        $expected = ['expected'];
+
+        $this->dbLayer->select(Argument::exact($expectedCondition), $this->primaryKey)
+                      ->shouldBeCalledTimes(1)
+                      ->willReturn($expected);
+        $this->bindDbLayer();
+        $this->bindPrimaryKey();
+
+        $result = $this->rowQueryFindableTrait->find($emptyCondition);
+        $this->assertEquals($expected, $result);
+    }
+
+    /**
+     * 测试 testFindWithCondition
+     */
+    public function testFindWithCondition()
+    {
+        $condition = $expectedCondition = 'condition';
+        $expected = ['expected'];
+
+        $this->dbLayer->select(Argument::exact($expectedCondition), $this->primaryKey)
+                      ->shouldBeCalledTimes(1)
+                      ->willReturn($expected);
+        $this->bindDbLayer();
+        $this->bindPrimaryKey();
+
+        $result = $this->rowQueryFindableTrait->find($condition);
+        $this->assertEquals($expected, $result);
+    }
+
+    /**
+     * 测试 testFindWithSize
+     */
+    public function testFindWithSize()
+    {
+        $size = 20;
+        $offset = 5;
+        $condition = 'condition';
+        $expected = ['expected'];
+        $expectedCondition = 'condition LIMIT '.$offset.','.$size;
+
+        $this->dbLayer->select(Argument::exact($expectedCondition), $this->primaryKey)
+                      ->shouldBeCalledTimes(1)
+                      ->willReturn($expected);
+        $this->bindDbLayer();
+        $this->bindPrimaryKey();
+
+        $result = $this->rowQueryFindableTrait->find($condition, $offset, $size);
+        $this->assertEquals($expected, $result);
+    }
+
+    /**
      * testCount()
      */
     public function testCount()
@@ -42,8 +100,16 @@ class RowQueryFindableTest extends TestCase
                       ->willReturn($expectedResult);
 
         $this->bindDbLayer();
+
         $result = $this->rowQueryFindableTrait->count($condition);
         $this->assertEquals($expectedCount, $result);
+    }
+
+    private function bindPrimaryKey()
+    {
+        $this->rowQueryFindableTrait->expects($this->once())
+                             ->method('getPrimaryKey')
+                             ->willReturn($this->primaryKey);
     }
 
     private function bindDbLayer()

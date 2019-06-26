@@ -105,8 +105,10 @@ abstract class MarmotCore
         include_once 'errorConfig.php';
         self::$errorDescriptions = include_once 'errorDescriptionConfig.php';
 
-        $this->getApplication()->initErrorConfig();
-        self::$errorDescriptions = self::$errorDescriptions + $this->getApplication()->getErrorDescriptions();
+        $application = $this->getApplication();
+        $application->initErrorConfig();
+
+        self::$errorDescriptions = self::$errorDescriptions + $application->getErrorDescriptions();
 
         self::setLastError(ERROR_NOT_DEFINED);
     }
@@ -213,7 +215,7 @@ abstract class MarmotCore
         self::$container->call($controller, $parameters);
     }
 
-    private function isMockedErrorRoute()
+    protected function isMockedErrorRoute()
     {
         $mockStatus = Server::get('HTTP_MOCK_STATUS', 0);
         $mockError = Server::get('HTTP_MOCK_ERROR', 0);

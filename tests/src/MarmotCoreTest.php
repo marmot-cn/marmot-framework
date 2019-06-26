@@ -3,6 +3,8 @@ namespace Marmot\Framework;
 
 use Marmot\Core;
 use PHPUnit\Framework\TestCase;
+use Marmot\Framework\MockApplication;
+use Marmot\Framework\Application\IApplication;
 
 class MarmotCoreTest extends TestCase
 {
@@ -75,11 +77,46 @@ class MarmotCoreTest extends TestCase
 
     public function testInitEnv()
     {
+        $core = $this->getMockBuilder(MockMarmotCore::class)
+                    ->setMethods(
+                        [
+                            'getApplication'
+                        ]
+                    )->getMock();
+        
+        $application = $this->prophesize(IApplication::class);
+        $application->initConfig()->shouldBeCalledTimes(1);
+
+        $core->expects($this->once())
+             ->method('getApplication')
+             ->willReturn($application->reveal());
+        
         $this->assertLessThanOrEqual(time(), Core::$container->get('time'));
+        $core->initEnv();
     }
 
-    public function testInitError()
+    public function testIsMockedErrorRoute()
     {
-        $this->assertEquals(ERROR_NOT_DEFINED, Core::getLastError()->getId());
+        $mockMarmotCore = new MockMarmotCore();
+
+        $_SERVER['HTTP_MOCK_STATUS'] = 1;
+        $_SERVER['HTTP_MOCK_ERROR'] = 1;
+        $result = $mockMarmotCore->isPublicMockedErrorRoute();
+        $this->assertTrue($result);
+
+        $_SERVER['HTTP_MOCK_STATUS'] = 1;
+        $_SERVER['HTTP_MOCK_ERROR'] = 0;
+        $result = $mockMarmotCore->isPublicMockedErrorRoute();
+        $this->assertFalse($result);
+
+        $_SERVER['HTTP_MOCK_STATUS'] = 0;
+        $_SERVER['HTTP_MOCK_ERROR'] = 1;
+        $result = $mockMarmotCore->isPublicMockedErrorRoute();
+        $this->assertFalse($result);
+
+        $_SERVER['HTTP_MOCK_STATUS'] = 0;
+        $_SERVER['HTTP_MOCK_ERROR'] = 0;
+        $result = $mockMarmotCore->isPublicMockedErrorRoute();
+        $this->assertFalse($result);
     }
 }

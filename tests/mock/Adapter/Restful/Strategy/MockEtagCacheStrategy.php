@@ -25,13 +25,23 @@ class MockEtagCacheStrategy
         return $this->getEtag($cacheResponse);
     }
 
-    public function isPublicResponseCached(Response $response)
+    public function isPublicCached($statusCode)
     {
-        return $this->isResponseCached($response);
+        return $this->isCached($statusCode);
     }
 
     protected function getCacheResponseRepository() : CacheResponseRepository
     {
         return new CacheResponseRepository();
+    }
+
+    public function getPublicWithCache(string $url, array $query = array(), array $requestHeaders = array())
+    {
+        return $this->getWithCache($url, $query, $requestHeaders);
+    }
+
+    public function publicEncryptKey(string $url, array $query = array(), array $requestHeaders = array()) : string
+    {
+        return $this->encryptKey($url, $query, $requestHeaders);
     }
 }

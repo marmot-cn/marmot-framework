@@ -10,6 +10,11 @@ class MockMarmotCore extends \Marmot\Framework\MarmotCore
         $this->application = new MockApplication();
     }
 
+    public function initApplicationPublic() : void
+    {
+        $this->initApplication();
+    }
+
     protected function getApplication() : IApplication
     {
         return $this->application;
@@ -40,5 +45,10 @@ class MockMarmotCore extends \Marmot\Framework\MarmotCore
 
     protected function initAutoload()
     {
+    }
+
+    public function isPublicMockedErrorRoute()
+    {
+        return parent::isMockedErrorRoute();
     }
 }

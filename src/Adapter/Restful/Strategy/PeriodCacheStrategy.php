@@ -29,7 +29,7 @@ trait PeriodCacheStrategy
 
     protected function getWithCache(string $url, array $query = array(), array $requestHeaders = array())
     {
-        $key = md5($this->getPrefix().$url.serialize($query).serialize($requestHeaders));
+        $key = $this->getWithCache($url, $query, $requestHeaders);
         $cacheResponse = $this->getCacheResponseRepository()->get($key);
         if (!$cacheResponse instanceof INull) {
             if (!$this->isTimeOut($cacheResponse)) {
@@ -59,6 +59,11 @@ trait PeriodCacheStrategy
         );
         $this->formatResponse($cacheResponse);
         $this->refreshCache($key, $cacheResponse);
+    }
+
+    protected function encryptKey(string $url, array $query = array(), array $requestHeaders = array()) : string
+    {
+        return md5($this->getPrefix().$url.serialize($query).serialize($requestHeaders));
     }
 
     protected function refreshTTL(CacheResponse $cacheResponse)

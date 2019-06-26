@@ -23,7 +23,7 @@ trait EtagCacheStrategy
 
     protected function getWithCache(string $url, array $query = array(), array $requestHeaders = array())
     {
-        $key = md5($this->getPrefix().$url.serialize($query).serialize($requestHeaders));
+        $key = $this->encryptKey($url, $query, $requestHeaders);
         $cacheResponse = $this->getCacheResponseRepository()->get($key);
         if (!$cacheResponse instanceof INull) {
             $etag = $this->getEtag($cacheResponse);
@@ -33,18 +33,27 @@ trait EtagCacheStrategy
         }
 
         $response = $this->getResponse($url, $query, $requestHeaders);
-        if ($this->isResponseCached($response)) {
+        $statusCode = $response->getStatusCode();
+        $contents = $response->getBody()->getContents();
+        $headers = $response->getHeaders();
+
+        if ($this->isCached($statusCode)) {
             $this->formatResponse($cacheResponse);
             return ;
         }
         
         $cacheResponse = new CacheResponse(
-            $response->getStatusCode(),
-            $response->getBody()->getContents(),
-            $response->getHeaders()
+            $statusCode,
+            $contents,
+            $headers
         );
         $this->formatResponse($cacheResponse);
         $this->refreshCache($key, $cacheResponse);
+    }
+
+    protected function encryptKey(string $url, array $query = array(), array $requestHeaders = array()) : string
+    {
+        return md5($this->getPrefix().$url.serialize($query).serialize($requestHeaders));
     }
 
     public function refreshCache($key, $response) : bool
@@ -60,8 +69,8 @@ trait EtagCacheStrategy
         return $etag;
     }
 
-    protected function isResponseCached(Response $response)
+    protected function isCached($statusCode)
     {
-        return $response->getStatusCode() == $this->getCachedStatusCode();
+        return $statusCode == $this->getCachedStatusCode();
     }
 }

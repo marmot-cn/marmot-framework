@@ -52,12 +52,13 @@ abstract class Db implements DbLayer
      */
     public function insert($insertSqlArr, $returnLastInsertId = true)
     {
-        $rows = $this->getDbDriver()->insert($this->tname(), $insertSqlArr);
+        $dbDriver = $this->getDbDriver();
+        $rows = $dbDriver->insert($this->tname(), $insertSqlArr);
         if (!$rows) {
             return false;
         }
         
-        return $returnLastInsertId ? Core::$dbDriver->lastInertId() : $rows;
+        return $returnLastInsertId ? $dbDriver->lastInsertId() : $rows;
     }
 
     /**

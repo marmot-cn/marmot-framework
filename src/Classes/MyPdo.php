@@ -104,7 +104,7 @@ class MyPdo
     {
         return $this->pdo->rollBack();
     }
-    public function lastInertId()
+    public function lastInsertId()
     {
         return $this->pdo->lastInsertId();
     }

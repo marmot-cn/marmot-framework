@@ -34,4 +34,19 @@ class MockPeriodCacheStrategy
     {
         return new CacheResponseRepository();
     }
+
+    public function publicEncryptKey(string $url, array $query = array(), array $requestHeaders = array()) : string
+    {
+        return $this->encryptKey($url, $query, $requestHeaders);
+    }
+
+    public function isPublicTimeOut(CacheResponse $cacheResponse)
+    {
+        return $this->isTimeOut($cacheResponse);
+    }
+
+    public function getPublicTTL()
+    {
+        return $this->getTTL();
+    }
 }

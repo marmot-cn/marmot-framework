@@ -18,7 +18,7 @@ trait RowQueryFindable
      *
      * @return [] 查询到的id数组
      */
-    public function find(string $condition, int $offset, int $size)
+    public function find(string $condition, int $offset = 0, int $size = 0)
     {
         if (empty($condition)) {
             $condition = '1';
@@ -27,7 +27,7 @@ trait RowQueryFindable
         if ($size > 0) {
             $condition = $condition.' LIMIT '.$offset.','.$size;
         }
-        return $this->getDbLayer()->select($condition, $this->primaryKey);
+        return $this->getDbLayer()->select($condition, $this->getPrimaryKey());
     }
 
     /**

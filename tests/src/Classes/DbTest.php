@@ -86,22 +86,39 @@ class DbTest extends TestCase
 
     public function testInsertWithLastInsertId()
     {
+        $insertSqlArr = array('insert');
+
+        $rows = 1;
+        $this->dbDriver->insert($this->db->tname(), $insertSqlArr)
+                    ->shouldBeCalledTimes(1)
+                    ->willReturn($rows);
+
+        $expectedLastInsertId = 2;
+        $this->dbDriver->lastInsertId()->shouldBeCalledTimes(1)->willReturn($expectedLastInsertId);
+
+        $this->db->expects($this->once())
+            ->method('getDbDriver')
+            ->willReturn($this->dbDriver->reveal());
+
+        $result = $this->db->insert($insertSqlArr, true);
+        $this->assertEquals($expectedLastInsertId, $result);
     }
 
     public function testInsertWithOutLastInsertId()
     {
         $insertSqlArr = array('insert');
 
+        $expectedRows = 1;
         $this->dbDriver->insert($this->db->tname(), $insertSqlArr)
                     ->shouldBeCalledTimes(1)
-                    ->willReturn(0);
+                    ->willReturn($expectedRows);
 
          $this->db->expects($this->once())
                  ->method('getDbDriver')
                  ->willReturn($this->dbDriver->reveal());
 
-        $result = $this->db->insert($insertSqlArr);
-        $this->assertFalse($result);
+        $result = $this->db->insert($insertSqlArr, false);
+        $this->assertEquals($expectedRows, $result);
     }
 
     public function testUpdate()
