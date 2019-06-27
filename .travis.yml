@@ -1,0 +1,8 @@
+language: php
+php:
+  - 7.1.9
+install: composer install
+script:
+  - vendor/bin/phpcs
+  - vendor/bin/phpcpd src
+  - vendor/bin/phpunit --stop-on-failure
