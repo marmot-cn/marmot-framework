@@ -1,10 +1,8 @@
 <?php
 namespace Marmot\Framework\Classes;
 
-class Server
+use Marmot\Basecode\Classes\Server as BaseServer;
+
+class Server extends BaseServer
 {
-    public static function get($name, $value = '') : string
-    {
-        return isset($_SERVER[$name]) ? $_SERVER[$name] : $value;
-    }
 }

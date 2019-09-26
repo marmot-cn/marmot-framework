@@ -5,11 +5,11 @@
  * @author  chloroplast1983
  * @version 1.0.20131007
  */
-
 namespace Marmot;
 
-use Marmot\Framework\Application\IApplication;
+use Marmot\Interfaces\Application\IApplication;
 use Marmot\Framework\MockApplication;
+use Marmot\Framework\MarmotCore;
 
 /**
  * 文件核心类
@@ -17,7 +17,7 @@ use Marmot\Framework\MockApplication;
  * @author  chloroplast1983
  * @version 1.0.20130916
  */
-class Core extends \Marmot\Framework\MarmotCore
+class Core extends MarmotCore
 {
     private static $instance;
 
@@ -38,6 +38,7 @@ class Core extends \Marmot\Framework\MarmotCore
     public function initTest()
     {
         $this->initAutoload();//autoload
+        $this->initFramework();
         $this->initApplication();
         $this->initTestEnv();//初始化测试环境
         $this->initContainer();//引入容器

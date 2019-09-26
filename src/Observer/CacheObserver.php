@@ -1,8 +1,8 @@
 <?php
 namespace Marmot\Framework\Observer;
 
-use Marmot\Framework\Interfaces\Observer;
-use Marmot\Framework\Interfaces\Command;
+use Marmot\Interfaces\Observer;
+use Marmot\Interfaces\Command;
 
 /**
  * 全站观察者文件,需要统一函数update

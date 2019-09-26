@@ -4,6 +4,11 @@ namespace Marmot\Framework\Interfaces;
 /**
  * DB层,用于接偶所有使用缓存的"具体"
  *
+ * 1. 删除
+ * 2. 添加
+ * 3. 查询
+ * 4. 更新
+ *
  * @codeCoverageIgnore
  *
  * @author chloroplast

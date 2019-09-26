@@ -10,12 +10,7 @@ class RepositoryTest extends TestCase
     public function setUp()
     {
         $this->repository = $this->getMockBuilder(MockRepository::class)
-                         ->setMethods(
-                             [
-                                 'getActualAdapter',
-                                 'getMockAdapter'
-                             ]
-                         )->getMock();
+                            ->getMock();
     }
 
     public function tearDown()
@@ -23,37 +18,11 @@ class RepositoryTest extends TestCase
         unset($this->repository);
     }
 
-    public function testIsMocked()
+    public function testExtendsBaseRepository()
     {
-        $_SERVER['HTTP_MOCK_STATUS'] = 1;
-
-        $result = $this->repository->isMocked();
-        $this->assertTrue($result);
-    }
-
-    public function testGetActualAdapter()
-    {
-        $_SERVER['HTTP_MOCK_STATUS'] = 0;
-
-        $this->repository->expects($this->once())
-                 ->method('getActualAdapter');
-
-        $this->repository->expects($this->exactly(0))
-                 ->method('getMockAdapter');
-
-        $this->repository->getAdapter();
-    }
-
-    public function testGetMockAdapter()
-    {
-        $_SERVER['HTTP_MOCK_STATUS'] = 1;
-
-        $this->repository->expects($this->exactly(0))
-                 ->method('getActualAdapter');
-
-        $this->repository->expects($this->once())
-                 ->method('getMockAdapter');
-
-        $this->repository->getAdapter();
+        $this->assertInstanceOf(
+            'Marmot\Basecode\Classes\Repository',
+            $this->repository
+        );
     }
 }

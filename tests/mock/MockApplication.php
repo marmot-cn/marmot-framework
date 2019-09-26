@@ -1,7 +1,7 @@
 <?php
 namespace Marmot\Framework;
 
-use Marmot\Framework\Application\IApplication;
+use Marmot\Interfaces\Application\IApplication;
 
 class MockApplication implements IApplication
 {

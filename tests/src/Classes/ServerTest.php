@@ -17,20 +17,11 @@ class ServerTest extends TestCase
         unset($this->server);
     }
 
-    public function testGetServerVariable()
+    public function testExtendsBaseServer()
     {
-        $expected = 'test';
-        $_SERVER['test'] = $expected;
-
-        $result = $this->server->get('test');
-        $this->assertEquals($expected, $result);
-    }
-
-    public function testGetServerDefaultVariable()
-    {
-        $expected = 'test';
-
-        $result = $this->server->get('test', $expected);
-        $this->assertEquals($expected, $result);
+        $this->assertInstanceOf(
+            'Marmot\Basecode\Classes\Server',
+            $this->server
+        );
     }
 }

@@ -16,29 +16,16 @@ class NullTranslatorTest extends TestCase
         $this->nullTranslator = NullTranslator::getInstance();
     }
 
-    public function testImplementsITranslator()
+    public function tearDown()
     {
-        $this->assertInstanceOf('Marmot\Framework\Interfaces\ITranslator', $this->nullTranslator);
+        unset($this->nullTranslator);
     }
 
-    public function testImplementsNull()
+    public function testExtendsBaseNullTranslator()
     {
-        $this->assertInstanceOf('Marmot\Framework\Interfaces\INull', $this->nullTranslator);
-    }
-
-    public function testArrayToObject()
-    {
-        $result = $this->nullTranslator->arrayToObject(array());
-
-        $this->assertFalse($result);
-        $this->assertEquals(TRANSLATOR_NOT_EXIST, Core::getLastError()->getId());
-    }
-
-    public function testObjectToArray()
-    {
-        $result = $this->nullTranslator->objectToArray('test');
-
-        $this->assertFalse($result);
-        $this->assertEquals(TRANSLATOR_NOT_EXIST, Core::getLastError()->getId());
+        $this->assertInstanceOf(
+            'Marmot\Basecode\Classes\NullTranslator',
+            $this->nullTranslator
+        );
     }
 }

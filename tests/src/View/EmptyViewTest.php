@@ -19,13 +19,11 @@ class EmptyViewTest extends TestCase
         unset($this->stub);
     }
 
-    public function testCorrectImplementIView()
+    public function testExtendsBaseEmptyView()
     {
-        $this->assertInstanceof('Marmot\Framework\Interfaces\IView', $this->stub);
-    }
-
-    public function testDisplay()
-    {
-        $this->assertEmpty($this->stub->display());
+        $this->assertInstanceOf(
+            'Marmot\Basecode\View\EmptyView',
+            $this->stub
+        );
     }
 }

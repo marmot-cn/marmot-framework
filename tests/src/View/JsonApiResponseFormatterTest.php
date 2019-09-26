@@ -23,7 +23,7 @@ class JsonApiResponseFormatterTest extends TestCase
 
     public function testCorrectImplementResponseFormatter()
     {
-        $this->assertInstanceof('Marmot\Framework\Interfaces\IResponseFormatter', $this->stub);
+        $this->assertInstanceof('Marmot\Interfaces\IResponseFormatter', $this->stub);
     }
 
     public function testFormat()

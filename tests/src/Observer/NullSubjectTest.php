@@ -19,34 +19,11 @@ class NullSubjectTest extends TestCase
         unset($this->subject);
     }
 
-    public function testImplementsObserver()
+    public function testExtendsBaseNullSubject()
     {
-        $this->assertInstanceOf('Marmot\Framework\Interfaces\Subject', $this->subject);
-    }
-
-    public function testImplementsNull()
-    {
-        $this->assertInstanceOf('Marmot\Framework\Interfaces\INull', $this->subject);
-    }
-
-    public function testAttach()
-    {
-        $result = $this->subject->attach(new MockObserver());
-        $this->assertFalse($result);
-        $this->assertEquals(SUBJECT_NOT_EXIST, Core::getLastError()->getId());
-    }
-
-    public function testDetach()
-    {
-        $result = $this->subject->detach(new MockObserver());
-        $this->assertFalse($result);
-        $this->assertEquals(SUBJECT_NOT_EXIST, Core::getLastError()->getId());
-    }
-
-    public function testNotifyObserver()
-    {
-        $result = $this->subject->notifyObserver(new MockObserver());
-        $this->assertFalse($result);
-        $this->assertEquals(SUBJECT_NOT_EXIST, Core::getLastError()->getId());
+        $this->assertInstanceOf(
+            'Marmot\Basecode\Observer\NullSubject',
+            $this->subject
+        );
     }
 }

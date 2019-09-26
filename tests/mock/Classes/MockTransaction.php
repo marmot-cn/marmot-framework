@@ -2,8 +2,8 @@
 namespace Marmot\Framework\Classes;
 
 use Marmot\Framework\Observer\Subject;
-use Marmot\Framework\Interfaces\Subject as ISubject;
-use Marmot\Framework\Interfaces\Observer;
+use Marmot\Interfaces\Subject as ISubject;
+use Marmot\Interfaces\Observer;
 use Marmot\Core;
 
 class MockTransaction extends Transaction

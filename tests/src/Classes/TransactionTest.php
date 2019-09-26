@@ -40,7 +40,7 @@ class TransactionTest extends TestCase
     public function testGetTransactionSubject()
     {
         $this->assertInstanceOf(
-            'Marmot\Framework\Interfaces\Subject',
+            'Marmot\Interfaces\Subject',
             $this->transaction->getTransactionSubject()
         );
     }
@@ -130,7 +130,7 @@ class TransactionTest extends TestCase
     public function testResetTransactionSubject()
     {
         $result = $this->mockTransaction->resetTransactionSubject();
-        $this->assertInstanceOf('Marmot\Framework\Interfaces\INull', $this->mockTransaction->getTransactionSubject());
+        $this->assertInstanceOf('Marmot\Interfaces\INull', $this->mockTransaction->getTransactionSubject());
         $this->assertTrue($result);
     }
 }

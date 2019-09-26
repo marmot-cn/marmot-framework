@@ -35,17 +35,12 @@ class SaveCacheCommandTest extends TestCase
         unset($this->cacheDriver);
     }
 
-    public function testImplementsCommand()
+    public function testExtendsBaseSaveCacheCommand()
     {
-        $this->assertInstanceOf('Marmot\Framework\Interfaces\Command', $this->command);
-    }
-
-    public function testConstructro()
-    {
-        $mockCommand = new MockSaveCacheCommand($this->key, $this->data, $this->time);
-        $this->assertEquals($this->key, $mockCommand->getKey());
-        $this->assertEquals($this->data, $mockCommand->getData());
-        $this->assertEquals($this->time, $mockCommand->getTime());
+        $this->assertInstanceOf(
+            'Marmot\Basecode\Command\Cache\SaveCacheCommand',
+            $this->command
+        );
     }
 
     /**

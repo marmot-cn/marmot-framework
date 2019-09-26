@@ -1,23 +1,24 @@
 <?php
 namespace Marmot\Framework;
 
-use Marmot\Framework\Application\IApplication;
+use Marmot\Interfaces\Application\IApplication;
+use Marmot\Framework\MarmotCore;
 
-class MockMarmotCore extends \Marmot\Framework\MarmotCore
+class MockMarmotCore extends MarmotCore
 {
     protected function initApplication() : void
     {
         $this->application = new MockApplication();
     }
 
-    public function initApplicationPublic() : void
-    {
-        $this->initApplication();
-    }
-
     protected function getApplication() : IApplication
     {
         return $this->application;
+    }
+    
+    public function initApplicationPublic() : void
+    {
+        $this->initApplication();
     }
 
     public function initEnv()

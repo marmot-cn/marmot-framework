@@ -7,7 +7,6 @@ use Marmot\Core;
 
 class JsonapiStrategyTest extends TestCase
 {
-
     public function setUp()
     {
         $this->strategy = new JsonapiStrategy();

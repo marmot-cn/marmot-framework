@@ -1,7 +1,7 @@
 <?php
 namespace Marmot\Framework\View;
 
-use Marmot\Framework\Interfaces\IView;
+use Marmot\Interfaces\IView;
 use Marmot\Framework\Classes\Server;
 use Marmot\Core;
 

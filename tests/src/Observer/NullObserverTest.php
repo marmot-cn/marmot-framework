@@ -19,20 +19,11 @@ class NullObserverTest extends TestCase
         unset($this->observer);
     }
 
-    public function testImplementsObserver()
+    public function testExtendsBaseNullObserver()
     {
-        $this->assertInstanceOf('Marmot\Framework\Interfaces\Observer', $this->observer);
-    }
-
-    public function testImplementsNull()
-    {
-        $this->assertInstanceOf('Marmot\Framework\Interfaces\INull', $this->observer);
-    }
-
-    public function testUpdate()
-    {
-        $result = $this->observer->update();
-        $this->assertFalse($result);
-        $this->assertEquals(OBSERVER_NOT_EXIST, Core::getLastError()->getId());
+        $this->assertInstanceOf(
+            'Marmot\Basecode\Observer\NullObserver',
+            $this->observer
+        );
     }
 }

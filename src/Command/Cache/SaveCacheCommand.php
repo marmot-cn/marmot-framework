@@ -1,32 +1,22 @@
 <?php
 namespace Marmot\Framework\Command\Cache;
 
-use Marmot\Framework\Interfaces;
-use Marmot\Framework\Observer\CacheObserver;
+use Marmot\Basecode\Command\Cache\SaveCacheCommand as BaseSaveCacheCommand;
 use Marmot\Framework\Classes\Transaction;
-use Marmot\Core;
+use Marmot\Framework\Observer\CacheObserver;
 
 /**
  * 添加cache缓存命令
  * @author chloroplast1983
  */
 
-class SaveCacheCommand implements Interfaces\Command
+class SaveCacheCommand extends BaseSaveCacheCommand
 {
-    private $key;
-    private $data;
-    private $time;
-
-    private $cacheDriver;
-
     private $transaction;
     
     public function __construct($key, $data, $time = 0)
     {
-        $this->key = $key;
-        $this->data = $data;
-        $this->time = $time;
-        $this->cacheDriver = Core::$cacheDriver;
+        parent::__construct($key, $data, $time);
         $this->transaction = Transaction::getInstance();
         
         $this->attachedByObserver();
@@ -34,31 +24,8 @@ class SaveCacheCommand implements Interfaces\Command
 
     public function __destruct()
     {
-        unset($this->key);
-        unset($this->data);
-        unset($this->time);
-        unset($this->cacheDriver);
+        parent::__destruct();
         unset($this->transaction);
-    }
-
-    protected function getKey() : string
-    {
-        return $this->key;
-    }
-
-    protected function getData()
-    {
-        return $this->data;
-    }
-
-    protected function getTime() : int
-    {
-        return $this->time;
-    }
-
-    protected function getCacheDriver()
-    {
-        return $this->cacheDriver;
     }
 
     protected function getTransaction() : Transaction
@@ -78,11 +45,6 @@ class SaveCacheCommand implements Interfaces\Command
     public function execute() : bool
     {
         $this->attachedByObserver();
-        return $this->getCacheDriver()->save($this->getKey(), $this->getData(), $this->getTime());
-    }
-
-    public function undo() : bool
-    {
-        return $this->getCacheDriver()->delete($this->getKey());
+        return parent::execute();
     }
 }

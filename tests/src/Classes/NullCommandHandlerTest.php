@@ -3,10 +3,6 @@ namespace Marmot\Framework\Classes;
 
 use PHPUnit\Framework\TestCase;
 
-use Marmot\Core;
-use Marmot\Framework\Classes\NullCommandHandler;
-use Marmot\Framework\Interfaces\ICommand;
-
 class NullCommandHandlerTest extends TestCase
 {
     private $nullCommandHandler;
@@ -16,23 +12,16 @@ class NullCommandHandlerTest extends TestCase
         $this->nullCommandHandler = NullCommandHandler::getInstance();
     }
 
-    public function testImplementsICommandHandler()
+    public function tearDown()
     {
-        $this->assertInstanceOf('Marmot\Framework\Interfaces\ICommandHandler', $this->nullCommandHandler);
+        unset($this->nullCommandHandler);
     }
 
-    public function testImplementsNull()
+    public function testExtendsBaseNullCommandHandler()
     {
-        $this->assertInstanceOf('Marmot\Framework\Interfaces\INull', $this->nullCommandHandler);
-    }
-
-    public function testExecute()
-    {
-        $command = $this->getMockBuilder(ICommand::class)
-                        ->getMock();
-        
-        $result = $this->nullCommandHandler->execute($command);
-        $this->assertFalse($result);
-        $this->assertEquals(COMMAND_HANDLER_NOT_EXIST, Core::getLastError()->getId());
+        $this->assertInstanceOf(
+            'Marmot\Basecode\Classes\NullCommandHandler',
+            $this->nullCommandHandler
+        );
     }
 }

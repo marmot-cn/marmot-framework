@@ -5,10 +5,10 @@ use PHPUnit\Framework\TestCase;
 
 use Marmot\Core;
 use Marmot\Framework\Classes\CommandBus;
-use Marmot\Framework\Interfaces\ICommandHandlerFactory;
-use Marmot\Framework\Interfaces\ICommand;
-use Marmot\Framework\Interfaces\INull;
-use Marmot\Framework\Interfaces\ICommandHandler;
+use Marmot\Interfaces\ICommandHandlerFactory;
+use Marmot\Interfaces\ICommand;
+use Marmot\Interfaces\INull;
+use Marmot\Interfaces\ICommandHandler;
 use Marmot\Framework\Classes\NullCommandHandler;
 
 use Prophecy\Argument;
@@ -42,6 +42,14 @@ class CommandBusTest extends TestCase
         unset($this->transaction);
     }
     
+    public function testExtendsBaseCommandBus()
+    {
+        $this->assertInstanceOf(
+            'Marmot\Basecode\Classes\CommandBus',
+            $this->commandBus
+        );
+    }
+
     /**
      * 1. getTransaction() 需要调用一次
      * 2. getCommandHandlerFactory() 需要调用一次

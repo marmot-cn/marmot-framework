@@ -1,25 +1,8 @@
 <?php
 namespace Marmot\Framework\View;
 
-use Marmot\Framework\Interfaces\IView;
+use Marmot\Basecode\View\EmptyView as BaseEmptyView;
 
-class EmptyView implements IView
+class EmptyView extends BaseEmptyView
 {
-    private $rules;
-
-    private $data;
-
-    public function __construct()
-    {
-        //判断data是否合法
-        //单个是否为对象,多个是否为数组的对象
-        $this->data = '';
-
-        $this->rules = array();
-    }
-
-    public function display()
-    {
-        return '';
-    }
 }

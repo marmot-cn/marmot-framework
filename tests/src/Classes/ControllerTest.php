@@ -8,17 +8,16 @@ use Marmot\Framework\Classes\Request;
 
 class ControllerTest extends TestCase
 {
-    private $stub;
+    private $controller;
 
     public function setUp()
     {
-        $this->stub = $this->getMockBuilder('Marmot\Framework\Classes\Controller')
-                      ->getMockForAbstractClass();
+        $this->controller = new MockController();
     }
 
     public function tearDown()
     {
-        unset($this->stub);
+        unset($this->controller);
     }
 
     /**
@@ -28,30 +27,19 @@ class ControllerTest extends TestCase
     {
         $this->assertInstanceof(
             'Marmot\Framework\Classes\Request',
-            $this->stub->getRequest()
+            $this->controller->getRequest()
         );
         $this->assertInstanceof(
             'Marmot\Framework\Classes\Response',
-            $this->stub->getResponse()
+            $this->controller->getResponse()
         );
     }
 
-    /**
-     * 因为response默认是jsonApi格式,所有数据都会被json_encode
-     * 所以我们期望渲染一个数组,并且期望一个json_encode格式的数组
-     */
-    public function testRender()
+    public function testExtendsBaseController()
     {
-        //mock interface
-        $ivew = $this->getMockBuilder('Marmot\Framework\Interfaces\IView')
-                     ->setMethods(['display'])
-                     ->getMock();
-
-        $ivew->expects($this->any())
-             ->method('display')
-             ->will($this->returnValue(json_encode(array('key'=>'value'))));
-
-        $this->stub->render($ivew);
-        $this->expectOutputString(json_encode(array('key'=>'value')));
+        $this->assertInstanceOf(
+            'Marmot\Basecode\Classes\Controller',
+            $this->controller
+        );
     }
 }

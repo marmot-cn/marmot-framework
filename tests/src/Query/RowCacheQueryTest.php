@@ -6,7 +6,7 @@ use Prophecy\Argument;
 
 use Marmot\Framework\Classes\MockCache;
 use Marmot\Framework\Classes\MockDb;
-use Marmot\Framework\Interfaces\CacheLayer;
+use Marmot\Interfaces\CacheLayer;
 use Marmot\Framework\Interfaces\DbLayer;
 
 class RowCacheQueryTest extends TestCase

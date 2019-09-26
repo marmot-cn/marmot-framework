@@ -1,7 +1,7 @@
 <?php
 namespace Marmot\Framework\Observer;
 
-use Marmot\Framework\Interfaces\Command;
+use Marmot\Interfaces\Command;
 use Marmot\Framework\Command\MockCommand;
 
 use PHPUnit\Framework\TestCase;
@@ -29,7 +29,7 @@ class CacheObserverTest extends TestCase
 
     public function testImplementsObserver()
     {
-        $this->assertInstanceOf('Marmot\Framework\Interfaces\Observer', $this->cacheObserver);
+        $this->assertInstanceOf('Marmot\Interfaces\Observer', $this->cacheObserver);
     }
 
     public function testGetCacheCommand()

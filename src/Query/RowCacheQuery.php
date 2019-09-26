@@ -3,7 +3,7 @@ namespace Marmot\Framework\Query;
 
 use Marmot\Framework\Classes;
 use Marmot\Framework\Interfaces\DbLayer;
-use Marmot\Framework\Interfaces\CacheLayer;
+use Marmot\Interfaces\CacheLayer;
 
 /**
  * RowCacheQuery文件,abstract抽象类.所有针对数据库行处理且需要缓存的类需要继承该类.
