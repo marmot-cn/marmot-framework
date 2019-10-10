@@ -12,7 +12,7 @@ use Marmot\Framework\Observer\CacheObserver;
 
 class SaveCacheCommand extends BaseSaveCacheCommand
 {
-    private $transaction;
+    protected $transaction;
     
     public function __construct($key, $data, $time = 0)
     {

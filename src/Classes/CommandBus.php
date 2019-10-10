@@ -10,7 +10,7 @@ use Marmot\Interfaces\INull;
 
 class CommandBus extends BaseCommandBus
 {
-    private $transaction;
+    protected $transaction;
 
     public function __construct(ICommandHandlerFactory $commandHandlerFactory)
     {

@@ -92,11 +92,11 @@ class Core extends MarmotCore
         return dirname(__FILE__) . DIRECTORY_SEPARATOR;
     }
 
-    protected function initDb()
+    protected function initDb() : void
     {
     }
 
-    protected function initCache()
+    protected function initCache() : void
     {
     }
 }
