@@ -30,11 +30,17 @@ abstract class MarmotCore extends BaseMarmotCore
         return $this->framework;
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     protected function initMysql()
     {
         self::$dbDriver = self::$container->get('Marmot\Framework\Classes\MyPdo');
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     protected function initMongo()
     {
         $mongoHost = self::$container->get('mongo.host');
@@ -48,6 +54,9 @@ abstract class MarmotCore extends BaseMarmotCore
         }
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     protected function initMemcached(array $memcachedServices)
     {
         //初始化memcached缓存 -- 开始

@@ -8,19 +8,11 @@ use Marmot\Framework\Application\IApplication;
 
 class MarmotCoreTest extends TestCase
 {
-    public function testExtendsBaseEmptyView()
+    public function testInitFramework()
     {
-        $core = $this->getMockBuilder(MockMarmotCore::class)
-            ->setMethods(
-                [
-                    'initFramework'
-                ]
-            )->getMock();
-
-
-        $this->assertInstanceOf(
-            'Marmot\Basecode\MarmotCore',
-            $core
-        );
+        $marmotCore = new MockMarmotCore();
+        $marmotCore->initFramework();
+        $frameWork = $marmotCore->getFrameWork();
+        $this->assertInstanceOf('Marmot\Interfaces\Application\IFramework', $frameWork);
     }
 }

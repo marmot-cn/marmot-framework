@@ -3,6 +3,10 @@ namespace Marmot\Framework;
 
 use Marmot\Interfaces\Application\IFramework;
 
+/**
+ * @codeCoverageIgnore
+ */
+
 define('SDK_ROOT', dirname(__FILE__) . DIRECTORY_SEPARATOR);
 
 class Framework implements IFramework

@@ -8,10 +8,10 @@ use PDO;
  */
 class MyPdo
 {
-
-    private $pdo = null;
+    protected $pdo = null;
+    
     public $statement = null;
-    private $isAddsla = false;
+
     public $options = array(
         PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES ",
     );
@@ -28,20 +28,33 @@ class MyPdo
         $dsn = "mysql:host={$host};port={$port};dbname={$dbname}";
         $this->pdo = new PDO($dsn, $user, $pass, $this->options);
     }
+
+    protected function getPdo()
+    {
+        return $this->pdo;
+    }
+
+    protected function getStatement()
+    {
+        return $this->statement;
+    }
     
     /**
      * 全局属性设置，包括：列名格式和错误提示类型    可以使用数字也能直接使用参数
      */
-    public function setAttr($param, $val = '')
+    public function setAttributes(array $attributes)
     {
-        if (is_array($param)) {
-            foreach ($param as $key => $val) {
-                $this->pdo->setAttribute($key, $val);
-            }
-            return true;
-        }
+        $pdo = $this->getPdo();
 
-        return $this->pdo->setAttribute($param, $val);
+        foreach ($attributes as $key => $val) {
+            $pdo->setAttribute($key, $val);
+        }
+        return true;
+    }
+
+    public function setAttribute($key, $value)
+    {
+        return $this->getPdo()->setAttribute($key, $value);
     }
 
     /**
@@ -53,9 +66,11 @@ class MyPdo
         if ($sql=="") {
             return false;
         }
-        $this->statement = $this->pdo->prepare($sql);
+
+        $this->statement = $this->getPdo()->prepare($sql);
         return $this->statement;
     }
+
     /**
      * 执行Sql语句,一般用于增、删、更新或者设置
      * 返回影响的行数
@@ -65,12 +80,14 @@ class MyPdo
         if ($sql=="") {
             return false;
         }
+
         try {
-            return $this->pdo->exec($sql);
+            return $this->getPdo()->exec($sql);
         } catch (Exception $e) {
             return $e->getMessage();
         }
     }
+
     /**
      * 执行有返回值的查询,返回PDOStatement
      * 可以通过链式操作,可以通过这个类封装的操作获取数据
@@ -80,33 +97,37 @@ class MyPdo
         if (empty($sql)) {
             return false;
         }
-        $this->statement = $this->pdo->query($sql);
+        $this->statement = $this->getPdo()->query($sql);
         return $this->fetchAll();
     }
+
     /**
      * 开启事务
      */
     public function beginTA()
     {
-        return $this->pdo->beginTransaction();
+        return $this->getPdo()->beginTransaction();
     }
+
     /**
      * 提交事务
      */
     public function commit()
     {
-        return $this->pdo->commit();
+        return $this->getPdo()->commit();
     }
+
     /**
      * 事务回滚
      */
     public function rollBack()
     {
-        return $this->pdo->rollBack();
+        return $this->getPdo()->rollBack();
     }
+
     public function lastInsertId()
     {
-        return $this->pdo->lastInsertId();
+        return $this->getPdo()->lastInsertId();
     }
      
     //**   PDOStatement 类操作封装    **//
@@ -118,40 +139,19 @@ class MyPdo
     {
         if (is_array($param)) {
             try {
-                return $this->statement->execute($param);
+                return $this->getStatement()->execute($param);
             } catch (Exception $e) {
                 return $this->errorInfo();
             }
         }
+
         try {
-            return $this->statement->execute();
+            return $this->getStatement()->execute();
         } catch (Exception $e) {
-                /* 返回的错误信息格式
-                [0] => 42S22
-                [1] => 1054
-                [2] => Unknown column 'col' in 'field list'
-                return $this->errorInfo();
-                 */
             return $this->errorInfo();
         }
     }
      
-    /**
-     * 参数1说明：
-    * PDO::FETCH_BOTH     也是默认的，两者都有（索引，关联）
-    * PDO::FETCH_ASSOC    关联数组
-    * PDO::FETCH_NUM      索引
-    * PDO::FETCH_OBJ          对象
-    * PDO::FETCH_LAZY     对象 会附带queryString查询SQL语句
-    * PDO::FETCH_BOUND    如果设置了bindColumn，则使用该参数
-    */
-    // private function fetch($fetchStyle=PDO::FETCH_ASSOC){
-    //     if(is_object($this->statement)){
-    //         return $this->statement->fetch($fetchStyle);
-    //     }else{
-    //         return false;
-    //     }
-    // }
     /**
     * 参数1说明：
     * PDO::FETCH_BOTH     也是默认的，两者都有（索引，关联）
@@ -165,33 +165,11 @@ class MyPdo
     * 参数2说明：
     * 给定要处理这个结果的类或函数
     */
-    private function fetchAll($fetchStyle = PDO::FETCH_ASSOC, $handle = '')
+    protected function fetchAll($fetchStyle = PDO::FETCH_ASSOC, $handle = '')
     {
-        if ($handle!='') {
-            return $this->statement->fetchAll($fetchStyle, $handle);
-        }
-        
-        return $this->statement->fetchAll($fetchStyle);
+        return $this->getStatement()->fetchAll($fetchStyle, $handle);
     }
-    /**
-    * 以对象形式返回 结果 跟fetch(PDO::FETCH_OBJ)一样
-    */
-    // private function fetchObject($class_name){
-    //     if($clss_name!=''){
-    //         return $this->statement->fetchObject($class_name);
-    //     }else{
-    //         return $this->statement->fetchObject();
-    //     }
-    // }
-     
-    /**
-    * public function bindColumn($array=array(),$type=EXTR_OVERWRITE){
-    *   if(count($array)>0){
-    *        extract($array,$type);
-    *    }
-    *    //$this->statement->bindColumn()
-    *}
-    */
+
      
     /**
      * 以引用的方式绑定变量到占位符(可以只执行一次prepare,
@@ -199,7 +177,7 @@ class MyPdo
      */
     public function bindParam($parameter, $variable, $dataType = PDO::PARAM_STR, $length = 6)
     {
-        return $this->statement->bindParam($parameter, $variable, $dataType, $length);
+        return $this->getStatement()->bindParam($parameter, $variable, $dataType, $length);
     }
      
     /**
@@ -207,38 +185,40 @@ class MyPdo
     */
     public function rowCount()
     {
-        return $this->statement->rowCount();
+        return $this->getStatement()->rowCount();
     }
+
     public function count()
     {
-        return $this->statement->rowCount();
+        return $this->rowCount();
     }
-     
      
     /**
      * 关闭编译的模版
      */
     public function close()
     {
-        return $this->statement->closeCursor();
+        return $this->closeCursor();
     }
+
     public function closeCursor()
     {
-        return $this->statement->closeCursor();
+        return $this->getStatement()->closeCursor();
     }
+
     /**
      * 返回错误信息也包括错误号
      */
-    private function errorInfo()
+    protected function errorInfo()
     {
-        return $this->statement->errorInfo();
+        return $this->getStatement()->errorInfo();
     }
     /**
      * 返回错误号
      */
-    private function errorCode()
+    protected function errorCode()
     {
-        return $this->statement->errorCode();
+        return $this->getStatement()->errorCode();
     }
      
     //简化操作for insert
@@ -257,7 +237,7 @@ class MyPdo
                 $valsArr[] = "'".$val."'";
             } else {
                 $colsStr[] = $key;
-                $valsStr[] = "'".$this->addsla($val)."'";
+                $valsStr[] = "'".$val."'";
             }
         }
         $cols = array_merge($colsStr, $colsArr);
@@ -282,7 +262,7 @@ class MyPdo
 
                 $set[] = $key."='".$val."'";
             } else {
-                $set[] = $key."='".trim($this->addsla($val))."'";
+                $set[] = $key."='".$val."'";
             }
         }
 
@@ -321,13 +301,5 @@ class MyPdo
         
         $sql = "DELETE FROM {$table} WHERE ".$where;
         return $this->exec($sql);
-    }
-     
-    private function addsla($data)
-    {
-        if ($this->isAddsla) {
-            return trim(addslashes($data));
-        }
-        return $data;
     }
 }

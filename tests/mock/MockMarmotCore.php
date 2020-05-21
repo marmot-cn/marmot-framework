@@ -3,9 +3,21 @@ namespace Marmot\Framework;
 
 use Marmot\Interfaces\Application\IApplication;
 use Marmot\Framework\MarmotCore;
+use Marmot\Interfaces\Application\IFramework;
 
 class MockMarmotCore extends MarmotCore
 {
+
+    public function initFramework() : void
+    {
+        parent::initFramework();
+    }
+
+    public function getFramework() : IFramework
+    {
+        return parent::getFramework();
+    }
+
     protected function initApplication() : void
     {
         $this->application = new MockApplication();
