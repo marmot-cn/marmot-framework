@@ -11,10 +11,10 @@
         }
     ],
     "require": {
-        "chloroplast/framework-basecode": "0.9.6"
+        "chloroplast/framework-basecode": "1.0.0"
     },
     "require-dev": {
-       "chloroplast/marmot-dev-pacakges": "dev-master"
+       "chloroplast/marmot-dev-pacakges": "1.0.0"
     },
     "autoload": {
         "psr-4": {
