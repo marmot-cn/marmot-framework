@@ -167,7 +167,10 @@ class MyPdo
     */
     protected function fetchAll($fetchStyle = PDO::FETCH_ASSOC, $handle = '')
     {
-        return $this->getStatement()->fetchAll($fetchStyle, $handle);
+        if ($handle!='') {
+             return $this->getStatement()->fetchAll($fetchStyle, $handle);
+        }
+         return $this->getStatement()->fetchAll($fetchStyle);
     }
 
      

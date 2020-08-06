@@ -345,7 +345,7 @@ class MyPdoTest extends TestCase
 
     public function testErrorInfo()
     {
-         $expected = 'expected';
+        $expected = 'expected';
 
         $this->pdoStatement->errorInfo()
                 ->shouldBeCalledTimes(1)
