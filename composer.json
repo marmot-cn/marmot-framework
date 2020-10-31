@@ -14,7 +14,7 @@
         "chloroplast/framework-basecode": "1.0.0"
     },
     "require-dev": {
-       "chloroplast/marmot-dev-pacakges": "1.0.0"
+       "chloroplast/marmot-dev-pacakges": "1.0.1"
     },
     "autoload": {
         "psr-4": {

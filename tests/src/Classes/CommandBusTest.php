@@ -16,8 +16,6 @@ use Prophecy\Argument;
 class CommandBusTest extends TestCase
 {
     private $commandBus;
-
-    private $commandHandler;
     
     private $command;
 
@@ -74,12 +72,8 @@ class CommandBusTest extends TestCase
         )->shouldBeCalledTimes(1)
          ->willReturn($commandHandler->reveal());
 
-        $this->commandBus->expects($this->once())
-                         ->method('getCommandHandlerFactory')
-                         ->willReturn($this->commandHandlerFactory->reveal());
-        $this->commandBus->expects($this->once())
-                         ->method('getTransaction')
-                         ->willReturn($this->transaction->reveal());
+        $this->bindCommandHandlerFactory();
+        $this->bindTransaction();
         
         $result = $this->commandBus->send($this->command->reveal());
 
@@ -111,12 +105,8 @@ class CommandBusTest extends TestCase
         )->shouldBeCalledTimes(1)
          ->willReturn($commandHandler->reveal());
 
-        $this->commandBus->expects($this->once())
-                         ->method('getCommandHandlerFactory')
-                         ->willReturn($this->commandHandlerFactory->reveal());
-        $this->commandBus->expects($this->once())
-                         ->method('getTransaction')
-                         ->willReturn($this->transaction->reveal());
+        $this->bindCommandHandlerFactory();
+        $this->bindTransaction();
         
         $result = $this->commandBus->send($this->command->reveal());
 
@@ -149,16 +139,26 @@ class CommandBusTest extends TestCase
         )->shouldBeCalledTimes(1)
          ->willReturn($commandHandler->reveal());
 
-        $this->commandBus->expects($this->once())
-                         ->method('getCommandHandlerFactory')
-                         ->willReturn($this->commandHandlerFactory->reveal());
-        $this->commandBus->expects($this->once())
-                         ->method('getTransaction')
-                         ->willReturn($this->transaction->reveal());
+        $this->bindCommandHandlerFactory();
+        $this->bindTransaction();
         
         $result = $this->commandBus->send($this->command->reveal());
         
         $this->assertTrue($result);
+    }
+
+    private function bindCommandHandlerFactory()
+    {
+        $this->commandBus->expects($this->once())
+                         ->method('getCommandHandlerFactory')
+                         ->willReturn($this->commandHandlerFactory->reveal());
+    }
+
+    private function bindTransaction()
+    {
+        $this->commandBus->expects($this->once())
+                         ->method('getTransaction')
+                         ->willReturn($this->transaction->reveal());
     }
 
     public function testNullCommandHandler()

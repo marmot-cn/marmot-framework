@@ -37,6 +37,16 @@ abstract class Db implements DbLayer
         return $this->dbDriver;
     }
 
+    protected function getTable() : string
+    {
+        return $this->table;
+    }
+
+    protected function getTablePrefix() : string
+    {
+        return $this->tablepre;
+    }
+
     /**
      * 删除数据操作,但是不提倡物理删除数据
      * @param array|string $wheresqlArr 查询匹配条件
@@ -121,6 +131,6 @@ abstract class Db implements DbLayer
      */
     public function tname() : string
     {
-        return $this->tablepre.$this->table;
+        return $this->getTablePrefix().$this->getTable();
     }
 }

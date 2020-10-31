@@ -3,6 +3,9 @@ namespace Marmot\Framework\Classes;
 
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ */
 class DbTest extends TestCase
 {
     private $table = 'test';

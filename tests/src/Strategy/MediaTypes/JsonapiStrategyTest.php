@@ -5,6 +5,9 @@ use PHPUnit\Framework\TestCase;
 use Marmot\Framework\Classes\Request;
 use Marmot\Core;
 
+/**
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ */
 class JsonapiStrategyTest extends TestCase
 {
     public function setUp()

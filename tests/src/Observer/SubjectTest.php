@@ -10,8 +10,6 @@ class SubjectTest extends TestCase
 {
     private $subject;
 
-    private $mockSubject;
-
     public function setUp()
     {
         $this->subject = new MockSubject();

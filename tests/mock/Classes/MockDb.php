@@ -6,6 +6,11 @@ class MockDb extends Db
 {
     public function getTablePre() : string
     {
-        return $this->tablepre;
+        return parent::getTablePrefix();
+    }
+
+    public function getTable() : string
+    {
+        return parent::getTable();
     }
 }

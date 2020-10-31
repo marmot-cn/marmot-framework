@@ -7,6 +7,9 @@ use Marmot\Framework\Interfaces\DbLayer;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 
+/**
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ */
 class RowQueryTest extends TestCase
 {
     private $dbLayer;//数据层
@@ -167,7 +170,7 @@ class RowQueryTest extends TestCase
      */
     public function testGetOneEmptyResult()
     {
-        $rowQuery = $this->getMockBuilder(RowQuery::class)
+        $this->rowQuery = $this->getMockBuilder(RowQuery::class)
                                 ->setMethods(
                                     [
                                         'getDbLayer',

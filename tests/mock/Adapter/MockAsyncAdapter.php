@@ -10,10 +10,12 @@ class MockAsyncAdapter extends GuzzleAdapter implements IAsyncAdapter
 {
     public function fetchOneAsync(int $id)
     {
+        unset($id);
     }
 
     public function fetchListAsync(array $ids)
     {
+        unset($ids);
     }
 
     public function searchAsync(
@@ -22,6 +24,10 @@ class MockAsyncAdapter extends GuzzleAdapter implements IAsyncAdapter
         int $number = 0,
         int $size = 20
     ) {
+        unset($filter);
+        unset($sort);
+        unset($number);
+        unset($size);
     }
 
     protected function getTranslator() : IRestfulTranslator

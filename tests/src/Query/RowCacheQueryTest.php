@@ -9,6 +9,9 @@ use Marmot\Framework\Classes\MockDb;
 use Marmot\Interfaces\CacheLayer;
 use Marmot\Framework\Interfaces\DbLayer;
 
+/**
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ */
 class RowCacheQueryTest extends TestCase
 {
     private $rowCacheQuery;

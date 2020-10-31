@@ -3,9 +3,13 @@ namespace Marmot\Framework\Classes;
 
 use PDO;
 use PDOStatement;
+use Prophecy\Argument;
 
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ */
 class MyPdoTest extends TestCase
 {
     private $myPdo;
@@ -218,7 +222,7 @@ class MyPdoTest extends TestCase
     {
         $expected = 'expected';
 
-        $this->pdoStatement->fetchAll(PDO::FETCH_ASSOC, '')
+        $this->pdoStatement->fetchAll(Argument::exact(PDO::FETCH_ASSOC))
                 ->shouldBeCalledTimes(1)
                 ->willReturn($expected);
 
