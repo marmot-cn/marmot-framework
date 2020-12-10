@@ -102,7 +102,7 @@ abstract class Db implements DbLayer
      *
      */
     public function join(
-        DbLayer $dbLayer,
+        DbLayer $joinDbLayer,
         string $joinCondition,
         string $sql,
         string $select = '*',
@@ -117,11 +117,11 @@ abstract class Db implements DbLayer
             $sqlstr .= ' INNER JOIN ';
         } elseif ($joinDirection == 'L') {
             $sqlstr .= ' LEFT JOIN ';
-        } elseif ($joinDirection == 'R') {
+        } else {
             $sqlstr .= ' RIGHT JOIN ';
         }
 
-        $sqlstr .= $dbLayer->tname().' ON '.$joinCondition.$sql;
+        $sqlstr .= $joinDbLayer->tname().' ON '.$joinCondition.$sql;
  
         return $this->getDbDriver()->query($sqlstr);
     }

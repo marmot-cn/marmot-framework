@@ -3,3 +3,4 @@ vendor
 *.xmind
 utc
 UnitTestCover
+cache

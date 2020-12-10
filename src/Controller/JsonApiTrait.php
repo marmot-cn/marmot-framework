@@ -47,7 +47,7 @@ trait JsonApiTrait
      *   $perpage
      * )
      **/
-    private function formatParameters() : array
+    protected function formatParameters() : array
     {
         $parameters = $this->getParameters();
 

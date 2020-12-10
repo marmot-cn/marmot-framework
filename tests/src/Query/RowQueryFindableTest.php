@@ -2,8 +2,11 @@
 namespace Marmot\Framework\Query;
 
 use PHPUnit\Framework\TestCase;
-use Marmot\Framework\Interfaces\DbLayer;
 use Prophecy\Argument;
+
+use Marmot\Framework\Interfaces\DbLayer;
+use Marmot\Framework\Interfaces\MockDbLayer;
+use Marmot\Framework\Classes\Db;
 
 class RowQueryFindableTest extends TestCase
 {
@@ -17,7 +20,7 @@ class RowQueryFindableTest extends TestCase
     {
         $this->primaryKey = 'key';
         $this->rowQueryFindableTrait = $this->getMockForTrait(RowQueryFindable::class);
-        $this->dbLayer = $this->prophesize(DbLayer::class);
+        $this->dbLayer = $this->prophesize(Db::class);
     }
 
     public function tearDown()
@@ -103,6 +106,74 @@ class RowQueryFindableTest extends TestCase
 
         $result = $this->rowQueryFindableTrait->count($condition);
         $this->assertEquals($expectedCount, $result);
+    }
+
+    /**
+     * test join 连表的默认参数
+     * 1. 不给参数 select, 默认为 *
+     * 2. 不给 joinDirection, 默认为 I
+     */
+    public function testJoinWithoutDefaultParameters()
+    {
+        $mockDbLayer = new MockDbLayer();
+        $joinCondition = 'joinCondition';
+        $sql = 'sql';
+        $select = 'select';
+        $joinDirection = 'joinDirection';
+
+        $expectedResult = 'expectedResult';
+
+        $this->dbLayer->join(
+            $mockDbLayer,
+            $joinCondition,
+            $sql,
+            $select,
+            $joinDirection
+        )->shouldBeCalledTimes(1)
+             ->willReturn($expectedResult);
+
+        $this->bindDbLayer();
+
+        $result = $this->rowQueryFindableTrait->join(
+            $mockDbLayer,
+            $joinCondition,
+            $sql,
+            $select,
+            $joinDirection
+        );
+        $this->assertEquals($expectedResult, $result);
+    }
+
+    /**
+     * test join 连表非默认参数
+     * 1. select, 给定参数
+     * 2. joinDirection, 给定参数
+     */
+    public function testJoinWithDefaultParamerers()
+    {
+        $mockDbLayer = new MockDbLayer();
+        $joinCondition = 'joinCondition';
+        $sql = 'sql';
+
+        $expectedResult = 'expectedResult';
+
+        $this->dbLayer->join(
+            $mockDbLayer,
+            $joinCondition,
+            $sql,
+            '*',
+            'I'
+        )->shouldBeCalledTimes(1)
+             ->willReturn($expectedResult);
+
+        $this->bindDbLayer();
+
+        $result = $this->rowQueryFindableTrait->join(
+            $mockDbLayer,
+            $joinCondition,
+            $sql
+        );
+        $this->assertEquals($expectedResult, $result);
     }
 
     private function bindPrimaryKey()

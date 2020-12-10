@@ -2,6 +2,7 @@
 namespace Marmot\Framework\Classes;
 
 use PHPUnit\Framework\TestCase;
+use Marmot\Framework\Interfaces\MockDbLayer;
 
 /**
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)
@@ -178,9 +179,87 @@ class DbTest extends TestCase
     }
 
     /**
-     * dataProvider
+     * 连表查询测试
      */
-    public function testJoin()
+    public function testJoinDefault()
     {
+        $tableName = 'tableName';
+        $mockDb = new MockDb($tableName);
+        $joinCondition = 'joinCondition';
+        $sql = 'conditon';
+
+        $expected = 'expectedResult';
+
+        $combinedSql = 'SELECT * FROM '.$this->db->tname()
+                       .' INNER JOIN '.$mockDb->tname()
+                       .' ON '.$joinCondition
+                       .' WHERE '.$sql;
+
+        $this->dbDriver->query($combinedSql)
+                    ->shouldBeCalledTimes(1)
+                    ->willReturn($expected);
+
+        $this->db->expects($this->once())
+                 ->method('getDbDriver')
+                 ->willReturn($this->dbDriver->reveal());
+
+        $result = $this->db->join($mockDb, $joinCondition, $sql);
+        $this->assertEquals($expected, $result);
+    }
+
+    public function testJoinLeft()
+    {
+        $tableName = 'tableName';
+        $mockDb = new MockDb($tableName);
+        $joinCondition = 'joinCondition';
+        $sql = 'conditon';
+        $select = 'select';
+        $joinDirection = 'L';
+
+        $expected = 'expectedResult';
+
+        $combinedSql = 'SELECT '.$select.' FROM '.$this->db->tname()
+                       .' LEFT JOIN '.$mockDb->tname()
+                       .' ON '.$joinCondition
+                       .' WHERE '.$sql;
+
+        $this->dbDriver->query($combinedSql)
+                    ->shouldBeCalledTimes(1)
+                    ->willReturn($expected);
+
+        $this->db->expects($this->once())
+                 ->method('getDbDriver')
+                 ->willReturn($this->dbDriver->reveal());
+
+        $result = $this->db->join($mockDb, $joinCondition, $sql, $select, $joinDirection);
+        $this->assertEquals($expected, $result);
+    }
+
+    public function testRightLeft()
+    {
+        $tableName = 'tableName';
+        $mockDb = new MockDb($tableName);
+        $joinCondition = 'joinCondition';
+        $sql = 'conditon';
+        $select = 'select';
+        $joinDirection = 'R';
+
+        $expected = 'expectedResult';
+
+        $combinedSql = 'SELECT '.$select.' FROM '.$this->db->tname()
+                       .' RIGHT JOIN '.$mockDb->tname()
+                       .' ON '.$joinCondition
+                       .' WHERE '.$sql;
+
+        $this->dbDriver->query($combinedSql)
+                    ->shouldBeCalledTimes(1)
+                    ->willReturn($expected);
+
+        $this->db->expects($this->once())
+                 ->method('getDbDriver')
+                 ->willReturn($this->dbDriver->reveal());
+
+        $result = $this->db->join($mockDb, $joinCondition, $sql, $select, $joinDirection);
+        $this->assertEquals($expected, $result);
     }
 }

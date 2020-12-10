@@ -4,7 +4,7 @@ namespace Marmot\Framework\Classes;
 use PDO;
 
 /**
- * @Injectable(lazy=true)
+ *
  */
 class MyPdo
 {
@@ -17,15 +17,17 @@ class MyPdo
     );
 
     /**
-     * @Inject({"database.host","database.port","database.user","database.password","database.dbname"})
+     * @Inject({"database.host","database.port","database.user","database.password","database.dbname", "database.charset"})
      */
-    public function __construct($host, $port, $user, $pass, $dbname, $persistent = false, $charset = "utf8")
+    public function __construct($host, $port, $user, $pass, $dbname, $charset = "utf8", $persistent = false)
     {
         $this->options[PDO::MYSQL_ATTR_INIT_COMMAND] .= $charset;
         if ($persistent) {
             $this->options[PDO::ATTR_PERSISTENT] = true;
         }
         $dsn = "mysql:host={$host};port={$port};dbname={$dbname}";
+        var_dump($this->options);
+        exit();
         $this->pdo = new PDO($dsn, $user, $pass, $this->options);
     }
 

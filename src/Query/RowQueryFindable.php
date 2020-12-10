@@ -40,4 +40,24 @@ trait RowQueryFindable
         $count = $this->getDbLayer()->select($condition, 'COUNT(*) as count');
         return $count[0]['count'];
     }
+
+    /**
+     *
+     * 连表查询
+     */
+    public function join(
+        DbLayer $joinDbLayer,
+        string $joinCondition,
+        string $sql,
+        string $select = '*',
+        string $joinDirection = 'I'
+    ) {
+        return  $this->getDbLayer()->join(
+            $joinDbLayer,
+            $joinCondition,
+            $sql,
+            $select,
+            $joinDirection
+        );
+    }
 }
