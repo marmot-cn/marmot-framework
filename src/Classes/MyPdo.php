@@ -4,7 +4,7 @@ namespace Marmot\Framework\Classes;
 use PDO;
 
 /**
- *
+ * @Injectable(lazy=true)
  */
 class MyPdo
 {
