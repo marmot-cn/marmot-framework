@@ -26,8 +26,6 @@ class MyPdo
             $this->options[PDO::ATTR_PERSISTENT] = true;
         }
         $dsn = "mysql:host={$host};port={$port};dbname={$dbname}";
-        var_dump($this->options);
-        exit();
         $this->pdo = new PDO($dsn, $user, $pass, $this->options);
     }
 
