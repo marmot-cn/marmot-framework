@@ -29,3 +29,8 @@ return [
 'database.charset'  => 'utf8mb4'
 ];
 ```
+
+* `IRowQuery`
+	* `find`
+	* `count`
+	* `join`
