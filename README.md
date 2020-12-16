@@ -34,3 +34,10 @@ return [
 	* `find`
 	* `count`
 	* `join`
+
+### 1.1.2
+
+* `MyPDO.php`
+	* `insert`和`update`区别
+		* 数字, 不添加单引号
+		* 字符串, 添加单引号
