@@ -240,7 +240,7 @@ class MyPdo
                 $valsArr[] = "'".$val."'";
             } else {
                 $colsStr[] = $key;
-                $valsStr[] = is_numeric($val) ? $val : "'".$val."'";
+                $valsStr[] = is_string($val) ? "'".$val."'" : $val;
             }
         }
         $cols = array_merge($colsStr, $colsArr);
@@ -265,7 +265,7 @@ class MyPdo
 
                 $set[] = $key."='".$val."'";
             } else {
-                $val = is_numeric($val) ? $val : "'".$val."'";
+                $val = is_string($val) ? "'".$val."'" : $val;
                 $set[] = $key."=".$val;
             }
         }

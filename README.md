@@ -37,6 +37,8 @@ return [
 
 ### 1.1.2
 
+针对`bit`位数据插入和修改的`bug`
+
 * `MyPDO.php`
 	* `insert`和`update`区别
 		* 数字, 不添加单引号
