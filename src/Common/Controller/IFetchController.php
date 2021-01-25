@@ -1,5 +1,5 @@
 <?php
-namespace Marmot\Framework\Common\Controller\Interfaces;
+namespace Marmot\Framework\Common\Controller;
           
 interface IFetchController
 {
