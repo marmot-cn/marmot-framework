@@ -1,45 +1,9 @@
 # README
 
-### 1.0.0
-	
-* 单元测试`70%`
+## 说明
 
-### 1.1.0
-	
-* 升级:  "chloroplast/marmot-dev-pacakges": "1.0.1"
+后端服务层框架
 
-### 1.1.1
+[框架文档](https://code.aliyun.com/marmot-cn/docs)
 
-* `RowQueryFindable.class.php`
-	* 添加`join`方法
-* `MyPdo`, 添加字符集配置信息, `database.charset`
-* `JsonApiTrait`
-	* `formatParameters`->`protected`
-
-```
-return [
-
-//database
-'database.host'     => 'mysql',
-'database.port'     => 3306,
-'database.dbname'   => 'credit_data',
-'database.user'     => 'root',
-'database.password' => '123456',
-'database.tablepre' => 'pcore_',
-'database.charset'  => 'utf8mb4'
-];
-```
-
-* `IRowQuery`
-	* `find`
-	* `count`
-	* `join`
-
-### 1.1.2
-
-针对`bit`位数据插入和修改的`bug`
-
-* `MyPDO.php`
-	* `insert`和`update`区别
-		* 数字, 不添加单引号
-		* 字符串, 添加单引号
+[镜像使用说明](https://code.aliyun.com/qxy-cloud/docs/blob/master/qxy/qxy-ops/%E5%AE%B9%E5%99%A8%E9%95%9C%E5%83%8F%E7%89%88%E6%9C%AC%E8%AF%B4%E6%98%8E.md)
