@@ -65,26 +65,37 @@ class Core extends MarmotCore
 
     protected function initAutoload()
     {
+        include 'vendor/autoload.php';
         //加载框架Application文件的autoload,匿名函数 -- 开始
         spl_autoload_register(
             function ($className) {
-                $classFile = str_replace(['\\','Marmot/Framework/'], ['/',''], $className) . '.php';
-                $classFile = $this->getAppPath().'src/'.$classFile;
-                if (file_exists($classFile)) {
-                      include_once $classFile;
-                }
-            }
-        );
+                $file = str_replace(['\\','Marmot/Framework/'], ['/',''], $className) . '.php';
 
-        spl_autoload_register(
-            function ($className) {
-                $classFile = str_replace(['\\','Marmot/Framework/'], ['/',''], $className) . '.php';
-                $classFile = $this->getAppPath().'tests/mock/'.$classFile;
+                $classFile = $this->getAppPath().'src/'.$file;
                 if (file_exists($classFile)) {
                     include_once $classFile;
                 }
+
+                //加载 ut 测试文件
+                $unitTestFile = $this->getAppPath().'tests/ut/src/'.$file;
+                if (file_exists($unitTestFile)) {
+                    include_once $unitTestFile;
+                }
+
+                //加载 bdd 测试文件
+                $unitTestFile = $this->getAppPath().'tests/bdd/'.$file;
+                if (file_exists($unitTestFile)) {
+                    include_once $unitTestFile;
+                }
+
+                //加载mock文件
+                $mockFile = $this->getAppPath().'tests/mock/'.$file;
+                if (file_exists($mockFile)) {
+                    include_once $mockFile;
+                }
             }
         );
+        //加载框架Application文件的autoload,匿名函数 -- 开始
     }
 
     protected function getAppPath() : string

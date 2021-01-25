@@ -13,8 +13,8 @@
          bootstrap="./tests/bootstrap.php">
 
     <testsuites>
-        <testsuite name="Framework">
-            <directory>./tests/src</directory>
+        <testsuite name="ut">
+            <directory>./tests/ut/src</directory>
         </testsuite>
     </testsuites>
 
