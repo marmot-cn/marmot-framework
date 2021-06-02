@@ -11,7 +11,7 @@
         }
     ],
     "require": {
-        "chloroplast/framework-basecode": "1.0.1"
+        "chloroplast/framework-basecode": "1.0.2"
     },
     "require-dev": {
        "chloroplast/marmot-dev-pacakges": "1.0.1",
