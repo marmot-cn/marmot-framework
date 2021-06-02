@@ -227,7 +227,6 @@ class MyPdo
     //简化操作for insert
     public function insert($table, array $data)
     {
-
         $cols = $colsStr = $colsArr = array();
         $vals = $valsStr = $valsArr = array();
         foreach ($data as $key => $val) {
@@ -256,7 +255,6 @@ class MyPdo
     //简化操作for update
     public function update($table, array $data, $wheresqlArr = "")
     {
-    
         $set = array();
         foreach ($data as $key => $val) {
             if (is_array($val)) {

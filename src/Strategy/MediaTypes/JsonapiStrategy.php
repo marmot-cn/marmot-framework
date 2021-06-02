@@ -7,8 +7,7 @@ use Marmot\Framework\Classes\Request;
 
 class JsonapiStrategy implements IMediaTypeStrategy
 {
-    
-    private $request;
+    protected $request;
 
     public function validate(Request $request) : bool
     {
@@ -16,7 +15,7 @@ class JsonapiStrategy implements IMediaTypeStrategy
         return $this->validateAcceptHeader() && $this->validateContent();
     }
 
-    private function validateAcceptHeader(): bool
+    protected function validateAcceptHeader(): bool
     {
         $accept = $this->request->getHeader('accept', '');
         $accept = explode(',', $accept);
@@ -40,7 +39,7 @@ class JsonapiStrategy implements IMediaTypeStrategy
         return false;
     }
 
-    private function validateContent() : bool
+    protected function validateContent() : bool
     {
         if (!$this->request->isPostMethod() && !$this->request->isPutMethod()) {
             return true;
@@ -49,7 +48,7 @@ class JsonapiStrategy implements IMediaTypeStrategy
         return $this->validateContentTypeHeader() && $this->validateRawBody();
     }
 
-    private function validateContentTypeHeader() : bool
+    protected function validateContentTypeHeader() : bool
     {
         $contentType = $this->request->getHeader('content-type', '');
         $contentType = explode(',', $contentType);
@@ -73,7 +72,7 @@ class JsonapiStrategy implements IMediaTypeStrategy
         return false;
     }
 
-    private function validateRawBody() : bool
+    protected function validateRawBody() : bool
     {
         if (is_null(@json_decode($this->request->getRawBody()))) {
             Core::setLastError(INCORRECT_RAW_BODY);

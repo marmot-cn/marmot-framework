@@ -3,4 +3,5 @@ vendor
 *.xmind
 utc
 UnitTestCover
+!tests/bdd/cache
 cache

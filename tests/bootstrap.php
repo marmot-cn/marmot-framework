@@ -1,5 +1,7 @@
 <?php
-include_once 'Core.php';
+include './vendor/autoload.php';
+require './Core.php';
+require 'DbTrait.php';
 
-$core = \Marmot\Core::getInstance();
-$core->initTest();
+$testCore = Marmot\Core::getInstance();
+$testCore->initTest();

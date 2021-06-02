@@ -70,6 +70,19 @@ abstract class RowCacheQuery
     }
 
     /**
+     * 兼容 add/edit
+     */
+    public function edit(array $data, array $condition)
+    {
+        return $this->update($data, $condition);
+    }
+
+    public function insert(array $data, $lasetInsertId = true)
+    {
+        return $this->add($data, $lasetInsertId);
+    }
+
+    /**
      * @param array $data 更新数据
      * @param array $condition 更新条件 | 默认为主键
      */

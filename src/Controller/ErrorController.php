@@ -8,9 +8,6 @@ class ErrorController extends Controller
 {
     use JsonApiTrait;
 
-    /**
-     * @codeCoverageIgnore
-     */
     public function error()
     {
         $this->displayError();

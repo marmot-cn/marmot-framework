@@ -88,6 +88,12 @@ class Core extends MarmotCore
                     include_once $unitTestFile;
                 }
 
+                //加载 integration 测试文件
+                $integrationTestFile = $this->getAppPath().'tests/integration/'.$file;
+                if (file_exists($integrationTestFile)) {
+                    include_once $integrationTestFile;
+                }
+
                 //加载mock文件
                 $mockFile = $this->getAppPath().'tests/mock/'.$file;
                 if (file_exists($mockFile)) {
@@ -105,9 +111,11 @@ class Core extends MarmotCore
 
     protected function initDb() : void
     {
+        parent::initMysql();
     }
 
     protected function initCache() : void
     {
+        parent::initMemcached(self::$container->get('memcached.service'));
     }
 }

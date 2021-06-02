@@ -8,9 +8,6 @@ use Neomerx\JsonApi\Document\Link;
 
 use Marmot\Framework\Classes\Server;
 
-/**
- * @codeCoverageIgnore
- */
 trait JsonApiTrait
 {
 
@@ -45,7 +42,7 @@ trait JsonApiTrait
     /**
      * @SuppressWarnings(PHPMD.NPathComplexity)
      */
-    private function formatLinks(string $url, int $perpage, int $curpage, int $pages, int $prev, int $next)
+    protected function formatLinks(string $url, int $perpage, int $curpage, int $pages, int $prev, int $next)
     {
         $this->links  = [
                 Link::FIRST => $pages > 1 ? new Link(
@@ -71,7 +68,7 @@ trait JsonApiTrait
         ];
     }
 
-    private function formatMeta(int $curpage, int $pages, int $prev, int $next, int $num)
+    protected function formatMeta(int $curpage, int $pages, int $prev, int $next, int $num)
     {
         $this->meta['count'] = $num;
 

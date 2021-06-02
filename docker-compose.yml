@@ -1,6 +1,49 @@
-phpfpm:
-  image: "registry.cn-hangzhou.aliyuncs.com/phpfpm/phpfpm-end"
-  volumes:
-   - ./:/var/www/html/
-  cap_add:
-   - SYS_PTRACE
+version: "3"
+
+services:
+  nginx:
+    image: "registry.cn-hangzhou.aliyuncs.com/nginx-phpfpm/nginx-end"
+    ports:
+      - "8081:80"
+    links:
+      - "phpfpm"
+    volumes:
+      - ./:/var/www/html/
+    networks:
+      - application
+      - default
+    container_name: marmot-framwork-nginx
+
+  phpfpm:
+    image: "registry.cn-hangzhou.aliyuncs.com/phpfpm/phpfpm-end:latest"
+    volumes:
+      - ./:/var/www/html/
+    cap_add:
+      - SYS_PTRACE
+    environment:
+      - APP_ENV=dev
+    networks:
+      - default
+      - database
+    container_name: marmot-framwork-phpfpm
+
+  mysql:
+    image: "registry.cn-hangzhou.aliyuncs.com/marmot/mysql-5.7"
+    environment:
+     - MYSQL_ROOT_PASSWORD=123456
+    networks:
+     - database
+
+  memcached-1:
+    image: "registry.aliyuncs.com/marmot/memcached:1.0"
+    container_name: marmot-framwork-memcached-1
+
+  memcached-2:
+    image: "registry.aliyuncs.com/marmot/memcached:1.0"
+    container_name: marmot-framwork-memcached-2
+
+networks:
+  application:
+    external: true
+  database:
+    external: true

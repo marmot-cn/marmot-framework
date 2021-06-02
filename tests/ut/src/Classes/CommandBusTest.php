@@ -48,6 +48,15 @@ class CommandBusTest extends TestCase
         );
     }
 
+    public function testGetTransaction()
+    {
+        $commandBus = new MockCommandBus(new MockCommandHandlerFactory());
+        $this->assertInstanceOf(
+            'Marmot\Framework\Classes\Transaction',
+            $commandBus->getTransaction()
+        );
+    }
+
     /**
      * 1. getTransaction() 需要调用一次
      * 2. getCommandHandlerFactory() 需要调用一次

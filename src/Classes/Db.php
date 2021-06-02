@@ -10,10 +10,8 @@ use Marmot\Framework\Interfaces\DbLayer;
  * @author chloroplast1983
  * @version 1.0.20131007
  */
-
 abstract class Db implements DbLayer
 {
-    
     /**
      * @var string DB操作表名,不需要添加前缀
      */
@@ -83,7 +81,7 @@ abstract class Db implements DbLayer
         $useIndex = $useIndex == '' ? '' : ' '.$useIndex.' ';
 
         $sqlstr = 'SELECT ' . $select . ' FROM ' . $this->tname() . $useIndex . $sql;
-
+        
         return $this->getDbDriver()->query($sqlstr);
     }
 
