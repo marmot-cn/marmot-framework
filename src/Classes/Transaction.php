@@ -91,7 +91,7 @@ class Transaction
 
     protected function resetTransactionSubject() : bool
     {
-        $this->transactionSubject = new NullSubject();
+        $this->transactionSubject = NullSubject::getInstance();
         return true;
     }
 }
