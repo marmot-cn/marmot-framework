@@ -61,6 +61,20 @@ abstract class Db implements DbLayer
     }
 
     /**
+     * 批量插入数据操作
+     * @param array $insertSqlArr 需要插入数据库的数据数组
+     */
+    public function batchInsert($insertSqlArr)
+    {
+        $rows = $this->getDbDriver()->batchInsert($this->tname(), $insertSqlArr);
+        if (!$rows) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
      * 查询数据
      * @param stirng $sql condition 查询条件
      * @param string $select 查询数据

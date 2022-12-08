@@ -266,6 +266,45 @@ class MyPdo
         return $this->exec($sql);
     }
 
+    //批量新增 batchInsert
+    public function batchInsert($table, array $data)
+    {
+        $vals = array();
+
+        foreach ($data as $key => $val) {
+            $cols = $colsStr = $colsArr = array();
+            $valsStr = $valsArr = array();
+            foreach ($val as $k => $v) {
+                if (is_array($v)) {
+                    $colsArr[] = $k;
+
+                    $v = json_encode(Filter::stripslashesPlus($v), JSON_UNESCAPED_UNICODE);
+                    $v = Filter::addslashesPlus($v);
+
+                    $valsArr[] = "'".$v."'";
+                } else {
+                    $colsStr[] = $k;
+                    $valsStr[] = "'".$this->addsla($v)."'";
+                }
+            }
+
+            $vals[] = array_merge($valsStr, $valsArr);
+        }
+
+        $cols = array_merge($colsStr, $colsArr);
+
+        $sql  = "INSERT INTO {$table} (";
+        $sql .= implode(",", $cols).") VALUES ";
+
+        $count = count($vals);
+        foreach ($vals as $key => $val) {
+            $terminator = ($key+1)<$count ? ',' : ';';
+            $sql .= "(".implode(",", $val).")".$terminator;
+        }
+
+        return $this->exec($sql);
+    }
+
     //简化操作for update
     public function update($table, array $data, $wheresqlArr = "")
     {
